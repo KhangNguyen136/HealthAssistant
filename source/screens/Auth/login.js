@@ -6,16 +6,14 @@ import firebaseApp from '../../firebaseConfig';
 // import { Success, CheckInputFailed } from '../../Components/AlertMsg/messageAlert';
 import TextInputCard from '../../components/TextInputCard'
 import PasswordTextInput from '../../components/passwordInput';
-import { LoginButton } from '../../components/button';
+import { AuthButton } from '../../components/button';
 import LoadingIndicator from '../../components/loadingIndicator';
 import { FlexCard } from '../../components/card';
-import { loggedIn } from '../../redux/authStateSlice';
-import { useDispatch } from 'react-redux';
+import { showMessage } from 'react-native-flash-message';
 
 export default function Login(props) {
     const [loading, setLoading] = React.useState(false)
     const { navigation } = props
-    const dispatch = useDispatch()
 
     const LoginAcc = (email, password, setAccount) => {
         firebaseApp.auth().signInWithEmailAndPassword(email, password)
@@ -23,16 +21,21 @@ export default function Login(props) {
                 // Signed in
                 var user = userCredential.user;
                 setLoading(false)
-                // Success('Logged in successfully!', '')
-                console.log("Logged in successfully!")
+                showMessage({
+                    message: 'Logged in successfully',
+                    type: 'success'
+                });
                 dispatch(loggedIn())
             })
             .catch((error) => {
                 var errorCode = error.code;
                 var errorMessage = error.message;
                 setLoading(false)
-                // CheckInputFailed('Logged in failed!', errorMessage)
-                console.log("Log in fail: ", errorMessage)
+                showMessage({
+                    message: 'Login failed',
+                    description: error.message,
+                    type: 'danger'
+                })
             });
     }
     return (
@@ -51,11 +54,11 @@ export default function Login(props) {
                         <View style={{ alignSelf: 'center' }} >
                             <Image source={require('../../../assets/logo.png')} style={{ width: 200, height: 200, borderRadius: 40 }} />
                         </View>
-                        <TextInputCard placeholder={'Phone number or Email'} value={values.email} onChangeValue={handleChange('email')} onBlur={handleBlur('email')} />
+                        <TextInputCard title={'Email or phone number: '} placeholder={'Enter email or phone number'} value={values.email} onChangeValue={handleChange('email')} onBlur={handleBlur('email')} />
                         <View style={{ height: 10 }} />
                         <PasswordTextInput placeholder={'Password'} value={values.pass} onChangeValue={handleChange('pass')} onBlur={handleBlur('pass')} />
                         <View style={{ height: 10 }} />
-                        <LoginButton onPress={handleSubmit} title={'Login'} />
+                        <AuthButton onPress={handleSubmit} title={'Login'} />
                         <View style={{
                             flexDirection: 'row',
                             justifyContent: 'space-between',
@@ -78,11 +81,19 @@ export default function Login(props) {
 
 function CheckInput(email, pass) {
     if (validateEmail(email) === false) {
-        // CheckInputFailed('Invalid email', 'Check your email and try again!')
+        showMessage({
+            message: 'Invalid email',
+            description: 'Check your email and try again!',
+            type: 'warning'
+        })
         return false
     }
     if (checkPassword(pass) === false) {
-        // CheckInputFailed('Invalid password', 'Password must contain more than 5 characters!')
+        showMessage({
+            message: 'Invalid password',
+            description: 'Password must contain more than 5 characters!',
+            type: 'warning'
+        })
         return false
     }
     return true

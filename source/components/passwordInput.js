@@ -30,7 +30,6 @@ export default function PasswordTextInput({ value, placeholder, onChangeValue, o
 
 const styles = StyleSheet.create({
     container: {
-        height: 40,
         flexDirection: 'row',
         marginHorizontal: 10,
         marginVertical: 5,
@@ -39,11 +38,11 @@ const styles = StyleSheet.create({
         borderColor: 'black'
     },
     content: {
-        fontSize: 18,
+        fontSize: 16,
     },
     contentArea: {
         marginHorizontal: 5,
-        padding: 10,
+        padding: 5,
         flex: 1,
 
     }

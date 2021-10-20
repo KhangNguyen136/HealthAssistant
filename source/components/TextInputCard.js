@@ -1,46 +1,32 @@
 import React from 'react';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, StyleSheet, TextInput, Text } from 'react-native';
 import { GetIcon } from './button';
 
-export default function TextInputCard({ value, placeholder, onChangeValue, onBlur, keyboardType = 'default', isEdit = true }) {
+export default function TextInputCard({ value, title, placeholder, onChangeValue, onBlur, keyboardType = 'default', isEdit = true }) {
     var iconName
     var source
-    switch (placeholder) {
-        case 'Identity card':
-            iconName = 'idcard'
-            source = 'AntDesign'
+    switch (title) {
+        case 'Phone number: ':
+            iconName = 'phone'
+            source = 'SimpleLineIcons'
             break;
-        case 'Address':
-            iconName = 'address'
-            source = 'Entypo'
-            break;
-        case "Note":
-            iconName = 'text'
-            source = 'Entypo'
-            break;
-        case 'Enter price':
-            iconName = 'price-tag'
-            source = 'Entypo'
-            break;
-        case 'Phone number or Email':
-            iconName = 'user-circle-o'
-            source = 'FontAwesome'
-            break;
-        case 'Your email':
+        case 'Email or phone number: ':
+        case 'Email address: ':
             iconName = 'email'
             source = 'Entypo'
             break;
-        // case 'Enter room name':
-        //     iconName =
-        //     source = 
-        default:
-            iconName = 'pencil-square-o'
-            source = 'FontAwesome'
+
+        case 'Name: ':
+            iconName = 'user'
+            source = 'AntDesign'
     }
     return (
         <View style={styles.container} >
-            <GetIcon iconName={iconName} size={26} source={source} />
-            <View style={styles.contentArea}>
+            <View style={styles.titleContainer} >
+                <GetIcon iconName={iconName} size={20} source={source} />
+                <Text style={styles.title}>{title}</Text>
+            </View>
+            <View style={styles.contentContainer}>
                 <TextInput style={styles.content}
                     value={value}
                     onChangeText={onChangeValue}
@@ -48,7 +34,7 @@ export default function TextInputCard({ value, placeholder, onChangeValue, onBlu
                     onBlur={onBlur}
                     keyboardType={keyboardType}
                     editable={isEdit}
-
+                    multiline={true}
                 />
             </View>
         </View>
@@ -57,22 +43,24 @@ export default function TextInputCard({ value, placeholder, onChangeValue, onBlu
 
 const styles = StyleSheet.create({
     container: {
-        height: 50,
+        margin: 5
+    },
+    titleContainer: {
         flexDirection: 'row',
-        marginHorizontal: 10,
-        marginVertical: 5,
+        margin: 3,
         alignItems: 'center',
-        borderBottomWidth: 0.25,
-        borderColor: 'black'
     },
     content: {
-        flex: 1,
-        fontSize: 18,
+        fontSize: 15,
+        padding: 5,
     },
-    contentArea: {
-        marginHorizontal: 5,
-        padding: 10,
-        flex: 1,
-
-    }
+    contentContainer: {
+        // flex: 1,
+        borderWidth: 0.25,
+        borderColor: 'black',
+        margin: 1,
+        borderRadius: 8,
+        padding: 2,
+    },
+    title: { fontSize: 15, fontWeight: '500', marginLeft: 4 }
 })
