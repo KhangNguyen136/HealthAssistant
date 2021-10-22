@@ -65,17 +65,17 @@ export default function SignUp() {
                         <View style={{ alignSelf: 'center' }} >
                             <Image style={{ borderRadius: 40 }} source={require('../../../assets/logo.png')} />
                         </View>
-                        <TextInputCard title={'Email or phone number: '} placeholder={'Your email or phone number'} value={values.email} onChangeValue={handleChange('email')} onBlur={handleBlur('email')} />
+                        <TextInputCard title={'Email or phone number'} placeholder={'Your email or phone number'} value={values.email} onChangeValue={handleChange('email')} onBlur={handleBlur('email')} />
                         {/* <View style={{ height: 5 }} /> */}
-                        <PasswordTextInput placeholder={'Password'} value={values.pass} onChangeValue={handleChange('pass')} onBlur={handleBlur('pass')} />
+                        <PasswordTextInput title={'Password'} placeholder={'Enter password'} value={values.pass} onChangeValue={handleChange('pass')} onBlur={handleBlur('pass')} />
 
                         <Text style={{ paddingLeft: 10 }}>Must be contain at least 6 characters.</Text>
                         {/* <View style={{ height: 5 }} /> */}
-                        <PasswordTextInput placeholder={'Confirm password'} value={values.pass2} onChangeValue={handleChange('pass2')} onBlur={handleBlur('pass2')} />
+                        <PasswordTextInput title={'Confirm password'} placeholder={'Enter password again'} value={values.pass2} onChangeValue={handleChange('pass2')} onBlur={handleBlur('pass2')} />
                         <Text style={{ paddingLeft: 10, marginBottom: 5 }}>Must be the same as password.</Text>
 
                         {/* <View style={{ height: 5 }} /> */}
-                        <TextInputCard title={'Name: '} placeholder={'Display name'} value={values.displayName} onChangeValue={handleChange('displayName')} onBlur={handleBlur('displayName')} />
+                        <TextInputCard title={'Name'} placeholder={'Display name'} value={values.displayName} onChangeValue={handleChange('displayName')} onBlur={handleBlur('displayName')} />
                         <View style={{ height: 20 }} />
                         <AuthButton onPress={handleSubmit} title={'Sign up'} />
                         <View style={{

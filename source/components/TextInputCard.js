@@ -6,17 +6,18 @@ export default function TextInputCard({ value, title, placeholder, onChangeValue
     var iconName
     var source
     switch (title) {
-        case 'Phone number: ':
+        case 'Phone number':
             iconName = 'phone'
             source = 'SimpleLineIcons'
             break;
-        case 'Email or phone number: ':
-        case 'Email address: ':
+        case 'Email':
+        case 'Email address':
+        case 'Email or phone number':
             iconName = 'email'
             source = 'Entypo'
             break;
 
-        case 'Name: ':
+        case 'Name':
             iconName = 'user'
             source = 'AntDesign'
     }
@@ -43,24 +44,25 @@ export default function TextInputCard({ value, title, placeholder, onChangeValue
 
 const styles = StyleSheet.create({
     container: {
-        margin: 5
+        margin: 3
     },
     titleContainer: {
         flexDirection: 'row',
-        margin: 3,
+        margin: 2,
         alignItems: 'center',
     },
     content: {
-        fontSize: 15,
-        padding: 5,
+        fontSize: 16,
+        // paddingVertical: 5,
+        paddingHorizontal: 10
     },
     contentContainer: {
         // flex: 1,
         borderWidth: 0.25,
         borderColor: 'black',
         margin: 1,
-        borderRadius: 8,
+        borderRadius: 4,
         padding: 2,
     },
-    title: { fontSize: 15, fontWeight: '500', marginLeft: 4 }
+    title: { fontSize: 17, fontWeight: '600', marginLeft: 4 }
 })

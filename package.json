@@ -20,6 +20,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native-dialogflow": "^3.2.2",
     "react-native-flash-message": "^0.2.0",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-gifted-chat": "^0.16.3",
@@ -27,6 +28,7 @@
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-toast-message": "^1.6.0",
+    "react-native-voice": "^0.3.0",
     "react-native-web": "~0.13.12",
     "react-redux": "^7.2.5"
   },
