@@ -1,15 +1,16 @@
 import React from 'react';
-import { StyleSheet, View, Text, SafeAreaView, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import { Formik } from 'formik';
 import firebaseApp from '../../firebaseConfig';
 // import { Success, CheckInputFailed } from '../../Components/AlertMsg/messageAlert';
 import TextInputCard from '../../components/TextInputCard'
 import PasswordTextInput from '../../components/passwordInput';
-import { AuthButton } from '../../components/button';
+import { AuthButton, GetIcon, MyButton } from '../../components/button';
 import LoadingIndicator from '../../components/loadingIndicator';
 import { FlexCard } from '../../components/card';
 import { showMessage } from 'react-native-flash-message';
+import LoginWithBtn from '../../components/loginWithButton';
 
 export default function Login(props) {
     const [loading, setLoading] = React.useState(false)
@@ -25,7 +26,6 @@ export default function Login(props) {
                     message: 'Logged in successfully',
                     type: 'success'
                 });
-                dispatch(loggedIn())
             })
             .catch((error) => {
                 var errorCode = error.code;
@@ -39,7 +39,10 @@ export default function Login(props) {
             });
     }
     return (
-        <SafeAreaView style={globalStyles.container}>
+        <SafeAreaView style={{
+            ...globalStyles.container,
+            // backgroundColor: '#81ecec'
+        }}>
             <Formik initialValues={{ email: '', pass: '' }}
                 onSubmit={(values) => {
                     setLoading(true)
@@ -50,34 +53,46 @@ export default function Login(props) {
                     LoginAcc(values.email, values.pass)
                 }}>
                 {({ values, handleChange, handleSubmit, handleBlur }) => (
-                    <FlexCard >
-                        <View style={{ alignSelf: 'center' }} >
-                            <Image source={require('../../../assets/logo.png')} style={{ width: 200, height: 200, borderRadius: 40 }} />
-                        </View>
-                        <TextInputCard title={'Email or phone number'} placeholder={'Enter email or phone number'} value={values.email} onChangeValue={handleChange('email')} onBlur={handleBlur('email')} />
-                        <View style={{ height: 10 }} />
-                        <PasswordTextInput title={'Password'} placeholder={'Enter your password'} value={values.pass} onChangeValue={handleChange('pass')} onBlur={handleBlur('pass')} />
-                        <View style={{ height: 10 }} />
-                        <AuthButton onPress={handleSubmit} title={'Login'} />
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                        }} >
-                            <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')} >
-                                <Text style={{ fontSize: 14, fontWeight: '500', color: '#3399ff' }} >FORGOT PASSWORD</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => navigation.navigate('SignUp')} >
-                                <Text style={{ fontSize: 14, fontWeight: '500', color: '#3399ff' }}>SIGN UP</Text>
-                            </TouchableOpacity>
-                        </View>
-                        {loading &&
-                            <LoadingIndicator />
-                        }
-                    </FlexCard>
+                    <ScrollView style={{ flex: 1 }} >
+                        <FlexCard >
+                            {/* // <View> */}
+                            <View style={{ alignSelf: 'center' }} >
+                                <Image source={require('../../../assets/logo.png')} style={{ width: 200, height: 200, borderRadius: 40 }} />
+                            </View>
+                            <TextInputCard title={'Email'} placeholder={'Enter email'} value={values.email} onChangeValue={handleChange('email')} onBlur={handleBlur('email')} />
+                            <View style={{ height: 10 }} />
+                            <PasswordTextInput title={'Password'} placeholder={'Enter password'} value={values.pass} onChangeValue={handleChange('pass')} onBlur={handleBlur('pass')} />
+                            <View style={{ height: 10 }} />
+                            <AuthButton onPress={handleSubmit} title={'Login'} />
+                            <View style={{
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                            }} >
+                                <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')} >
+                                    <Text style={{ fontSize: 14, fontWeight: '500', color: '#3399ff' }} >FORGOT PASSWORD</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => navigation.navigate('SignUp')} >
+                                    <Text style={{ fontSize: 14, fontWeight: '500', color: '#3399ff' }}>SIGN UP</Text>
+                                </TouchableOpacity>
+
+                            </View>
+                            <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: '500' }} > OR </Text>
+                            <LoginWithBtn type={'facebook'} />
+                            <LoginWithBtn type={'google'} />
+                            <LoginWithBtn type={'phone'} />
+                            {loading &&
+                                <LoadingIndicator />
+                            }
+                            {/* </View> */}
+                        </FlexCard>
+                    </ScrollView>
+
                 )}
             </Formik>
         </SafeAreaView>)
 }
+
+
 
 function CheckInput(email, pass) {
     if (validateEmail(email) === false) {

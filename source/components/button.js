@@ -85,17 +85,18 @@ const styles = StyleSheet.create(
 
         },
         MyButtonContent: {
-            fontSize: 15,
-            fontWeight: '600'
+            fontSize: 16,
+            fontWeight: '600',
+            textAlign: 'center'
         },
         authButtonContainer: {
             margin: 5,
             width: '69%',
             alignSelf: 'center',
-            padding: 5,
+            padding: 6,
             alignItems: 'center',
             backgroundColor: '#3399ff',
-            borderRadius: 8,
+            borderRadius: 13,
             shadowColor: '#333',
             shadowOpacity: 0.1,
             shadowOffset: { width: 1, height: 1 },

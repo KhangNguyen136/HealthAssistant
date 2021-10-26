@@ -11,7 +11,7 @@ export default function TextInputCard({ value, title, placeholder, onChangeValue
             source = 'SimpleLineIcons'
             break;
         case 'Email':
-        case 'Email address':
+        case 'Email address:':
         case 'Email or phone number':
             iconName = 'email'
             source = 'Entypo'
@@ -44,7 +44,8 @@ export default function TextInputCard({ value, title, placeholder, onChangeValue
 
 const styles = StyleSheet.create({
     container: {
-        margin: 3
+        margin: 3,
+
     },
     titleContainer: {
         flexDirection: 'row',
@@ -53,16 +54,17 @@ const styles = StyleSheet.create({
     },
     content: {
         fontSize: 16,
-        // paddingVertical: 5,
-        paddingHorizontal: 10
+        paddingVertical: 4,
+        paddingHorizontal: 10,
+        backgroundColor: '#dfe6e9',
+        borderWidth: 0.5,
+        borderColor: 'gray',
+        borderRadius: 4,
+
     },
     contentContainer: {
         // flex: 1,
-        borderWidth: 0.25,
-        borderColor: 'black',
-        margin: 1,
-        borderRadius: 4,
-        padding: 2,
+        margin: 2,
     },
     title: { fontSize: 17, fontWeight: '600', marginLeft: 4 }
 })

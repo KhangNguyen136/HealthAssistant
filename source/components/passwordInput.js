@@ -25,7 +25,7 @@ export default function PasswordTextInput({ title, value, placeholder, onChangeV
                     onBlur={onBlur}
                     secureTextEntry={!show}
                 />
-                <IconButton iconName={showIcon} source={'Entypo'} onPress={() => setShow(!show)} size={20} />
+                <IconButton iconName={showIcon} source={'Entypo'} onPress={() => setShow(!show)} size={16} />
             </View>
         </View>
     )
@@ -33,22 +33,21 @@ export default function PasswordTextInput({ title, value, placeholder, onChangeV
 
 const styles = StyleSheet.create({
     container: {
-        // marginHorizontal: 5,
-        // marginVertical: 5,
-        borderBottomWidth: 0.25,
-        borderColor: 'black'
+        margin: 3
     },
     content: {
         fontSize: 16,
         paddingHorizontal: 10,
+        paddingVertical: 4,
         flex: 1
     },
     contentContainer: {
         flexDirection: 'row',
-        borderWidth: 0.25,
-        borderColor: 'black',
-        borderRadius: 4, alignItems: 'center',
-        padding: 2,
+        borderWidth: 0.5,
+        borderColor: 'gray',
+        borderRadius: 3, alignItems: 'center',
+        margin: 2,
+        backgroundColor: '#dfe6e9'
     },
     titleContainer: {
         flexDirection: 'row',

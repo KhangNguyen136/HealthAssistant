@@ -1,9 +1,8 @@
 {
-  "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "start": "react-native start",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
     "web": "expo start --web",
     "eject": "expo eject"
   },
@@ -19,7 +18,7 @@
     "formik": "^2.2.9",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native": "~0.63.4",
     "react-native-dialogflow": "^3.2.2",
     "react-native-flash-message": "^0.2.0",
     "react-native-gesture-handler": "^1.10.3",
@@ -30,10 +29,15 @@
     "react-native-toast-message": "^1.6.0",
     "react-native-voice": "^0.3.0",
     "react-native-web": "~0.13.12",
-    "react-redux": "^7.2.5"
+    "react-redux": "^7.2.5",
+    "expo-splash-screen": "~0.11.2",
+    "expo-updates": "~0.8.1",
+    "react-native-unimodules": "0.14.10"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
   },
-  "private": true
+  "private": true,
+  "name": "HealthAssistant",
+  "version": "1.0.0"
 }
