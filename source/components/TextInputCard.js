@@ -8,7 +8,7 @@ export default function TextInputCard({ value, title, placeholder, onChangeValue
     switch (title) {
         case 'Phone number':
             iconName = 'phone'
-            source = 'SimpleLineIcons'
+            source = 'FontAwesome'
             break;
         case 'Email':
         case 'Email address:':

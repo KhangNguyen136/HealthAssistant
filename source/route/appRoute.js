@@ -1,10 +1,11 @@
 import React from 'react';
 import SplashScreen from '../screens/SplashScreen';
-import AppDrawer from './drawerRoutes';
 import AuthStack from './AuthStack';
 import { NavigationContainer } from '@react-navigation/native';
 import firebaseApp from '../firebaseConfig';
 import FlashMessage from 'react-native-flash-message';
+import MainStack from './mainStack';
+import AppDrawer from './drawer';
 
 export default function AppRoute() {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false)
@@ -13,15 +14,17 @@ export default function AppRoute() {
         const auth = firebaseApp.auth()
         auth.onAuthStateChanged((user) => {
             if (user != null) {
-                setIsLoggedIn(true)
-                setIsLoading(false)
+                setLoginState(true)
             }
             else {
-                setIsLoggedIn(false)
-                setIsLoading(false)
+                setLoginState(false)
             }
         })
     }, [])
+    const setLoginState = (stt) => {
+        setIsLoggedIn(stt)
+        setIsLoading(false)
+    }
 
     if (isLoading) {
         return (
@@ -33,7 +36,8 @@ export default function AppRoute() {
             {
                 isLoggedIn == true ?
                     (
-                        <AppDrawer />
+                        // <AppDrawer />
+                        <MainStack />
                     ) :
                     (<AuthStack />)
             }

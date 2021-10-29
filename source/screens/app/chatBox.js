@@ -89,7 +89,7 @@ export default function ChatboxScreen() {
                 user={{
                     _id: 1,
                 }}
-            // renderSend={CustomButton}
+                renderSend={CustomButton}
 
             />
 
