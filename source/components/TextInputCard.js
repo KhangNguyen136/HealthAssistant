@@ -7,6 +7,7 @@ export default function TextInputCard({ value, title, placeholder, onChangeValue
     var source
     switch (title) {
         case 'Phone number':
+        case 'Số điện thoại':
             iconName = 'phone'
             source = 'FontAwesome'
             break;
@@ -18,6 +19,7 @@ export default function TextInputCard({ value, title, placeholder, onChangeValue
             break;
 
         case 'Name':
+        case 'Tên hiển thị':
             iconName = 'user'
             source = 'AntDesign'
     }

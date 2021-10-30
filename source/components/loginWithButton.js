@@ -9,17 +9,17 @@ export default function LoginWithBtn({ type, onPress }) {
     switch (type) {
         case 'apple':
             content = {
-                iconName: 'apple1', source: 'AntDesign', title: 'Sign in with apple', backgroundColor: '#4267B2'
+                iconName: 'apple1', source: 'AntDesign', title: 'Đăng nhập với apple', backgroundColor: '#4267B2'
             }
             break;
         case 'google':
             content = {
-                iconName: 'google', source: 'AntDesign', title: 'Sign in with google', backgroundColor: '#e17055'
+                iconName: 'google', source: 'AntDesign', title: 'Đăng nhập với google', backgroundColor: '#e17055'
             }
             break;
         case 'phone':
             content = {
-                iconName: 'phone', source: 'Entypo', title: 'Sign in with phone number', backgroundColor: '#38B45E'
+                iconName: 'phone', source: 'Entypo', title: 'Đăng nhập với số điện thoại', backgroundColor: '#38B45E'
             }
             break;
         default:

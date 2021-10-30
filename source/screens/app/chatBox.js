@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity } from 'react-native';
 import { GiftedChat, Send } from 'react-native-gifted-chat'
 import { dialogflowConfig } from '../../../env';
 import { Dialogflow_V2 } from 'react-native-dialogflow';
@@ -14,15 +14,22 @@ const BOT = {
 
 
 
-export default function ChatboxScreen() {
+export default function ChatboxScreen({ navigation }) {
     const [messages, setMessages] = React.useState([{
         _id: 0,
-        text: 'Hello! How can i help you?',
+        text: 'Xin chào! Tôi có thể giúp gì được cho bạn?',
         createdAt: new Date(),
         user: BOT
     }]);
 
     React.useEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity style={{ paddingRight: 7 }} onPress={() => navigation.navigate('History')} >
+                    <GetIcon iconName={'history'} source={'FontAwesome'} />
+                </TouchableOpacity>
+            ),
+        })
         Dialogflow_V2.setConfiguration(
             dialogflowConfig.client_email,
             dialogflowConfig.private_key,
@@ -57,7 +64,7 @@ export default function ChatboxScreen() {
             (result) => handleResponse(result),
             (error) => {
                 console.log(error.message)
-                showMessage({ message: 'Send failed', description: error.message, type: 'danger' })
+                showMessage({ message: 'Gửi thất bại', description: error.message, type: 'danger' })
             }
         )
     }, [])
@@ -82,7 +89,7 @@ export default function ChatboxScreen() {
     }
 
     return (
-        <View style={styles.container} >
+        <SafeAreaView style={styles.container} >
             <GiftedChat
                 messages={messages}
                 onSend={messages => onSend(messages)}
@@ -90,10 +97,10 @@ export default function ChatboxScreen() {
                     _id: 1,
                 }}
                 renderSend={CustomButton}
-
+                placeholder={'Nhập tin nhắn'}
             />
 
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -101,7 +108,5 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        // alignItems: 'center',
-        // justifyContent: 'center',
     },
 });

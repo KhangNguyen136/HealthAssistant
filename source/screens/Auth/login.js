@@ -23,7 +23,7 @@ export default function Login(props) {
                 var user = userCredential.user;
                 setLoading(false)
                 showMessage({
-                    message: 'Logged in successfully',
+                    message: 'Đăng nhập thành công',
                     type: 'success'
                 });
             })
@@ -32,7 +32,7 @@ export default function Login(props) {
                 var errorMessage = error.message;
                 setLoading(false)
                 showMessage({
-                    message: 'Login failed',
+                    message: 'Đăng nhập thất bại',
                     description: error.message,
                     type: 'danger'
                 })
@@ -59,24 +59,24 @@ export default function Login(props) {
                             <View style={{ alignSelf: 'center' }} >
                                 <Image source={require('../../../assets/logo.png')} style={{ width: 200, height: 200, borderRadius: 40 }} />
                             </View>
-                            <TextInputCard title={'Email'} placeholder={'Enter email'} value={values.email} onChangeValue={handleChange('email')} onBlur={handleBlur('email')} />
+                            <TextInputCard title={'Email'} placeholder={'Nhập email'} value={values.email} onChangeValue={handleChange('email')} onBlur={handleBlur('email')} />
                             <View style={{ height: 10 }} />
-                            <PasswordTextInput title={'Password'} placeholder={'Enter password'} value={values.pass} onChangeValue={handleChange('pass')} onBlur={handleBlur('pass')} />
+                            <PasswordTextInput title={'Mật khẩu'} placeholder={'Nhập mật khẩu'} value={values.pass} onChangeValue={handleChange('pass')} onBlur={handleBlur('pass')} />
                             <View style={{ height: 10 }} />
-                            <AuthButton onPress={handleSubmit} title={'Login'} />
+                            <AuthButton onPress={handleSubmit} title={'Đăng nhập'} />
                             <View style={{
                                 flexDirection: 'row',
                                 justifyContent: 'space-between',
                             }} >
                                 <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')} >
-                                    <Text style={{ fontSize: 14, fontWeight: '500', color: '#3399ff' }} >FORGOT PASSWORD</Text>
+                                    <Text style={{ fontSize: 14, fontWeight: '500', color: '#3399ff' }} >Quên mật khẩu</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => navigation.navigate('SignUp')} >
-                                    <Text style={{ fontSize: 14, fontWeight: '500', color: '#3399ff' }}>SIGN UP</Text>
+                                    <Text style={{ fontSize: 14, fontWeight: '500', color: '#3399ff' }}>Đăng ký</Text>
                                 </TouchableOpacity>
 
                             </View>
-                            <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: '500' }} > OR </Text>
+                            <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: '500' }} > HOẶC </Text>
                             <LoginWithBtn type={'facebook'} />
                             <LoginWithBtn type={'google'} />
                             <LoginWithBtn type={'phone'} />

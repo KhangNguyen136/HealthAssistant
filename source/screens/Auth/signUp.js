@@ -23,8 +23,8 @@ export default function SignUp() {
                 setLoading(false);
                 resetForm()
                 showMessage({
-                    message: 'Sign up successfully',
-                    description: 'Auto log in after sign up.',
+                    message: 'Đăng ký thành công',
+                    description: 'Tự động đăng nhập sau khi đăng ký',
                     type: 'success'
                 });
                 // firebaseApp.auth().signOut().then(() => {
@@ -41,7 +41,7 @@ export default function SignUp() {
                 var errorMessage = error.message;
                 setLoading(false);
                 showMessage({
-                    message: 'Sign up failed',
+                    message: 'Đăng ký thất bại',
                     description: error.message,
                     type: 'danger'
                 })
@@ -66,26 +66,26 @@ export default function SignUp() {
                             <View style={{ alignSelf: 'center' }} >
                                 <Image style={{ borderRadius: 40 }} source={require('../../../assets/logo.png')} />
                             </View>
-                            <TextInputCard title={'Email or phone number'} placeholder={'Your email or phone number'} value={values.email} onChangeValue={handleChange('email')} onBlur={handleBlur('email')} />
+                            <TextInputCard title={'Email'} placeholder={'Nhập email'} value={values.email} onChangeValue={handleChange('email')} onBlur={handleBlur('email')} />
                             {/* <View style={{ height: 5 }} /> */}
-                            <PasswordTextInput title={'Password'} placeholder={'Enter password'} value={values.pass} onChangeValue={handleChange('pass')} onBlur={handleBlur('pass')} />
+                            <PasswordTextInput title={'Mật khẩu'} placeholder={'Nhập mật khẩu'} value={values.pass} onChangeValue={handleChange('pass')} onBlur={handleBlur('pass')} />
 
-                            <Text style={{ paddingLeft: 10 }}>Must be contain at least 6 characters.</Text>
+                            <Text style={{ paddingLeft: 10 }}>Mật khẩu phải chứa ít nhất 6 ký tự.</Text>
                             {/* <View style={{ height: 5 }} /> */}
-                            <PasswordTextInput title={'Confirm password'} placeholder={'Enter password again'} value={values.pass2} onChangeValue={handleChange('pass2')} onBlur={handleBlur('pass2')} />
-                            <Text style={{ paddingLeft: 10, marginBottom: 5 }}>Must be the same as password.</Text>
+                            <PasswordTextInput title={'Xác nhận mật khẩu'} placeholder={'Nhập lại mật khẩu'} value={values.pass2} onChangeValue={handleChange('pass2')} onBlur={handleBlur('pass2')} />
+                            {/* <Text style={{ paddingLeft: 10, marginBottom: 5 }}>Must be the same as password.</Text> */}
 
                             {/* <View style={{ height: 5 }} /> */}
-                            <TextInputCard title={'Name'} placeholder={'Display name'} value={values.displayName} onChangeValue={handleChange('displayName')} onBlur={handleBlur('displayName')} />
+                            <TextInputCard title={'Tên hiển thị'} placeholder={'Nhập tên bạn muốn sử dụng'} value={values.displayName} onChangeValue={handleChange('displayName')} onBlur={handleBlur('displayName')} />
                             <View style={{ height: 20 }} />
-                            <AuthButton onPress={handleSubmit} title={'Sign up'} />
+                            <AuthButton onPress={handleSubmit} title={'Đăng ký'} />
                             <View style={{
                                 flexDirection: 'row',
                                 justifyContent: 'center',
                             }} >
-                                <Text style={{ fontSize: 14 }} >Have had an account already?</Text>
+                                <Text style={{ fontSize: 14 }} >Đã có tài khoản?</Text>
                                 <TouchableOpacity onPress={() => navigation.navigate('LogIn')} >
-                                    <Text style={{ paddingLeft: 3, fontSize: 14, fontWeight: '500', color: '#3399ff' }}>Sign in</Text>
+                                    <Text style={{ paddingLeft: 3, fontSize: 14, fontWeight: '500', color: '#3399ff' }}>Đăng nhập</Text>
                                 </TouchableOpacity>
                             </View>
                             {loading &&
