@@ -230,8 +230,8 @@ PODS:
     - React-Core
   - react-native-safe-area-context (3.2.0):
     - React-Core
-  - react-native-voice (0.3.0):
-    - React
+  - react-native-voice (3.2.2):
+    - React-Core
   - React-RCTActionSheet (0.63.4):
     - React-Core/RCTActionSheetHeaders (= 0.63.4)
   - React-RCTAnimation (0.63.4):
@@ -371,7 +371,7 @@ DEPENDENCIES:
   - react-native-dialogflow (from `../node_modules/react-native-dialogflow`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
-  - react-native-voice (from `../node_modules/react-native-voice`)
+  - "react-native-voice (from `../node_modules/@react-native-voice/voice`)"
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -458,7 +458,7 @@ EXTERNAL SOURCES:
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-voice:
-    :path: "../node_modules/react-native-voice"
+    :path: "../node_modules/@react-native-voice/voice"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -530,7 +530,7 @@ SPEC CHECKSUMS:
   react-native-dialogflow: 786714700b825b342c9db519efa0b467aee1cded
   react-native-image-picker: 9c8a2687b69300ad9e95cec5d38f35ab9d32467d
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
-  react-native-voice: 9829ac5dc9300687c5f215bddf6c9645e82923fc
+  react-native-voice: 634b2749a0f67676a999e97df4d8220ce59ac738
   React-RCTActionSheet: 89a0ca9f4a06c1f93c26067af074ccdce0f40336
   React-RCTAnimation: 1bde3ecc0c104c55df246eda516e0deb03c4e49b
   React-RCTBlob: a97d378b527740cc667e03ebfa183a75231ab0f0
@@ -551,6 +551,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 2be431101b73604e64fbfffcf759336f9d8fccbb
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
 
-PODFILE CHECKSUM: c42c1d6ffd6229b1e499835acee2605e89da641f
+PODFILE CHECKSUM: a62551295976fe88fa8d8aaca3491b347ac3f649
 
 COCOAPODS: 1.10.1
