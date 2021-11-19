@@ -6,7 +6,7 @@ import { Dialogflow_V2 } from 'react-native-dialogflow';
 import { showMessage } from 'react-native-flash-message';
 import { GetIcon, IconButton } from '../../components/button';
 import Voice from '@react-native-voice/voice';
-import { renderMessageText } from '../../components/customChatbox';
+import { renderMessageText, customMessage, customBubble } from '../../components/customChatbox';
 
 const BOT = {
     _id: 2,
@@ -239,8 +239,11 @@ export default function ChatboxScreen({ navigation }) {
                     _id: 1,
                 }}
                 renderSend={CustomButton}
+                // renderMessage={customMessage}
+                renderBubble={customBubble}
                 messagesContainerStyle={{
                     minHeight: 0,
+                    margin: 0
                     // maxHeight: 500
                     // flex: 1,
                 }}

@@ -37,6 +37,7 @@ export default function ForgotPassword({ navigation }) {
                 <Text style={styles.Title} >Reset password</Text>
                 <Text style={styles.content}>Enter the email with your account and we will send an email with instructions to reset your password.</Text>
                 <TextInputCard title={'Email address:'} placeholder={'Enter email'} value={email} onChangeValue={setEmail} />
+
                 <MyButton title={'Send instructions'} onPress={ok} />
             </FlexCard>
             {

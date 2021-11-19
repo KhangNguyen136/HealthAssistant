@@ -2,10 +2,11 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import ViewMoreText from 'react-native-view-more-text';
-import { GetIcon } from './button';
+import { GetIcon, IconButton } from './button';
 
 export default function FlexText({ currentMessage }) {
-    const textColor = currentMessage.user._id == 1 ? 'white' : 'black'
+    const isUser = currentMessage.user._id == 1
+    const textColor = isUser ? 'white' : 'black'
 
     const renderViewMore = (onPress) => {
         return (
@@ -24,16 +25,28 @@ export default function FlexText({ currentMessage }) {
     }
 
     return (
-        <View style={{ padding: 5, paddingHorizontal: 7, flexDirection: 'row', alignItems: 'center' }} >
-            <ViewMoreText numberOfLines={10}
+        // <View
+        // style={{
+        //     padding: 5, paddingHorizontal: 7, maxWidth: '80%',
+        //     flexDirection: 'row', alignItems: 'center'
+        // }} 
+        // >
+        <View>
+            < ViewMoreText numberOfLines={10}
                 renderViewLess={renderViewLess}
                 renderViewMore={renderViewMore}
-                textStyle={{ color: textColor, fontSize: 16 }}
+                textStyle={{ color: textColor, fontSize: 16, padding: 5, paddingHorizontal: 7 }
+                }
             >
-                <Text>
+                <Text >
                     {currentMessage.text}
                 </Text>
-            </ViewMoreText>
+
+            </ViewMoreText >
+            {/* <View style={{ margin: 0 }} >
+                <IconButton iconName={'text-to-speech'}
+                    source={'MaterialCommunityIcons'} size={30} />
+            </View> */}
         </View>
     )
 }

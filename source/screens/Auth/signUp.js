@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, SafeAreaView, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, SafeAreaView, Text, Image, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import { useNavigation } from '@react-navigation/core';
 import LoadingIndicator from '../../components/loadingIndicator';
@@ -14,14 +14,23 @@ import { showMessage } from 'react-native-flash-message';
 
 export default function SignUp() {
     const [loading, setLoading] = React.useState(false)
+    const [username, setUsername] = React.useState('')
+    const [password, setPassword] = React.useState('')
+    const [confirmPassword, setConfirmPassword] = React.useState('')
+    const [displayName, setDisplayName] = React.useState('')
+
+    const [usernameError, setUsernameError] = React.useState('')
+    const [passError, setPassError] = React.useState('')
+    const [confirmPassError, setConfirmPassError] = React.useState('')
+    const [displayNameError, setDisplayNameError] = React.useState('')
+
     const navigation = useNavigation()
-    const SignUpAcc = (email, password, resetForm) => {
+    const SignUpAcc = (email, password) => {
         firebaseApp.auth().createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
                 // Signed in 
                 var user = userCredential.user;
                 setLoading(false);
-                resetForm()
                 showMessage({
                     message: 'Đăng ký thành công',
                     description: 'Tự động đăng nhập sau khi đăng ký',
@@ -48,93 +57,123 @@ export default function SignUp() {
                 // ..
             });
     }
+    pressSignUp = () => {
+        console.log('press sign up')
+        if (CheckInput(username, password, confirmPassword, displayName) === false) {
+            console.log(false)
+            return
+        }
+        setLoading(true)
+
+        SignUpAcc(username, password)
+    }
+    function CheckInput(email, pass, pass2, name) {
+        if (validateEmail(email) === false) {
+            setUsernameError('Email không hợp lệ')
+            return false
+        }
+        if (checkPassword(pass) === false) {
+            setPassError('Mật khẩu phải chứa ít nhất 6 ký tự.')
+            return false
+        }
+        if (pass !== pass2) {
+            setConfirmPassError('Xác nhận mật khẩu không trùng khớp')
+
+            return false
+        }
+        if (name === '') {
+            setDisplayNameError('Vui lòng nhập tên hiển thị')
+            return false
+        }
+        return true
+    }
     return (
         <SafeAreaView style={globalStyles.container}>
             {/* <ScrollView style={{ flex: 1 }} > */}
-            <Formik initialValues={{ email: '', pass: '', pass2: '', displayName: '' }}
-                onSubmit={(values, { resetForm }) => {
-                    setLoading(true)
-                    if (CheckInput(values.email, values.pass, values.pass2, values.displayName) === false) {
-                        setLoading(false)
-                        return
-                    }
-                    SignUpAcc(values.email, values.pass, resetForm)
-                }}>
-                {({ values, handleChange, handleSubmit, handleBlur }) => (
-                    <ScrollView style={{ flex: 1 }} >
-                        <FlexCard  >
-                            <View style={{ alignSelf: 'center' }} >
-                                <Image style={{ borderRadius: 40 }} source={require('../../../assets/logo.png')} />
-                            </View>
-                            <TextInputCard title={'Email'} placeholder={'Nhập email'} value={values.email} onChangeValue={handleChange('email')} onBlur={handleBlur('email')} />
-                            {/* <View style={{ height: 5 }} /> */}
-                            <PasswordTextInput title={'Mật khẩu'} placeholder={'Nhập mật khẩu'} value={values.pass} onChangeValue={handleChange('pass')} onBlur={handleBlur('pass')} />
 
-                            <Text style={{ paddingLeft: 10 }}>Mật khẩu phải chứa ít nhất 6 ký tự.</Text>
-                            {/* <View style={{ height: 5 }} /> */}
-                            <PasswordTextInput title={'Xác nhận mật khẩu'} placeholder={'Nhập lại mật khẩu'} value={values.pass2} onChangeValue={handleChange('pass2')} onBlur={handleBlur('pass2')} />
-                            {/* <Text style={{ paddingLeft: 10, marginBottom: 5 }}>Must be the same as password.</Text> */}
-
-                            {/* <View style={{ height: 5 }} /> */}
-                            <TextInputCard title={'Tên hiển thị'} placeholder={'Nhập tên bạn muốn sử dụng'} value={values.displayName} onChangeValue={handleChange('displayName')} onBlur={handleBlur('displayName')} />
-                            <View style={{ height: 20 }} />
-                            <AuthButton onPress={handleSubmit} title={'Đăng ký'} />
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                            }} >
-                                <Text style={{ fontSize: 14 }} >Đã có tài khoản?</Text>
-                                <TouchableOpacity onPress={() => navigation.navigate('LogIn')} >
-                                    <Text style={{ paddingLeft: 3, fontSize: 14, fontWeight: '500', color: '#3399ff' }}>Đăng nhập</Text>
-                                </TouchableOpacity>
-                            </View>
-                            {loading &&
-                                <LoadingIndicator />
+            <ScrollView style={{ flex: 1 }} >
+                <FlexCard  >
+                    <View style={{ alignSelf: 'center' }} >
+                        <Image style={{ borderRadius: 40 }} source={require('../../../assets/logo.png')} />
+                    </View>
+                    <TextInputCard title={'Email'} placeholder={'Nhập email'} value={username}
+                        onChangeValue={(value) => {
+                            if (value == '') {
+                                setUsernameError('Vui lòng nhập email')
                             }
-                        </FlexCard>
-                    </ScrollView>
-                )}
-            </Formik>
+                            else {
+                                setUsernameError('')
+                            }
+                            setUsername(value)
+                        }} />
+
+                    <Text style={styles.error}>{usernameError}</Text>
+                    <PasswordTextInput title={'Mật khẩu'} placeholder={'Phải chứa ít nhất 6 ký tự.'} value={password}
+                        onChangeValue={(value) => {
+                            if (value == '') {
+                                setPassError('Mật khẩu phải chứa ít nhất 6 ký tự')
+                            }
+                            else {
+                                setPassError('')
+                            }
+                            setPassword(value)
+                        }} />
+
+                    <Text style={styles.error}>{passError}</Text>
+
+                    <PasswordTextInput title={'Xác nhận mật khẩu'} placeholder={'Nhập lại mật khẩu'} value={confirmPassword}
+                        onChangeValue={(value) => {
+                            if (value == '') {
+                                setConfirmPassError('Xác nhận mật khẩu không trùng khớp')
+                            }
+                            else {
+                                setConfirmPassError('')
+                            }
+                            setConfirmPassword(value)
+                        }} />
+
+                    <Text style={styles.error}>{confirmPassError}</Text>
+
+                    {/* <Text style={{ paddingLeft: 10, marginBottom: 5 }}>Must be the same as password.</Text> */}
+
+                    <TextInputCard title={'Tên hiển thị'} placeholder={'Nhập tên bạn muốn sử dụng'} value={displayName}
+                        onChangeValue={(value) => {
+                            if (value == '') {
+                                setDisplayNameError('Xác nhận mật khẩu không trùng khớp')
+                            }
+                            else {
+                                setDisplayNameError('')
+                            }
+                            setDisplayName(value)
+                        }} />
+
+                    <Text style={styles.error}>{displayNameError}</Text>
+                    <View style={{ height: 10 }} />
+                    <AuthButton onPress={pressSignUp} title={'Đăng ký'} />
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                    }} >
+                        <Text style={{ fontSize: 14 }} >Đã có tài khoản?</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('LogIn')} >
+                            <Text style={{ paddingLeft: 3, fontSize: 14, fontWeight: '500', color: '#3399ff' }}>Đăng nhập</Text>
+                        </TouchableOpacity>
+                    </View>
+                    {loading &&
+                        <LoadingIndicator />
+                    }
+                </FlexCard>
+            </ScrollView>
+
             {/* </ScrollView> */}
         </SafeAreaView>
     )
 }
 
-function CheckInput(email, pass, pass2, name) {
-    if (validateEmail(email) === false) {
-        showMessage({
-            message: 'Invalid email',
-            description: 'Check your email and try again!',
-            type: 'warning'
-        })
-        return false
-    }
-    if (checkPassword(pass) === false) {
-        showMessage({
-            message: 'Invalid password',
-            description: 'Password must contain more than 5 characters!',
-            type: 'warning'
-        })
-        return false
-    }
-    if (pass !== pass2) {
-        showMessage({
-            message: 'Confirm password failed',
-            description: 'Password and confirm password are not the same!',
-            type: 'warning'
-        })
-        return false
-    }
-    if (name === '') {
-        showMessage({
-            message: 'Please enter display name!',
-            description: 'We will use it to display your name in app',
-            type: 'warning'
-        })
-        return false
-    }
-    return true
-}
+styles = StyleSheet.create({
+    error: { color: 'orange', marginLeft: 10, fontWeight: '500' },
+})
+
 
 function checkPassword(pass) {
     if (pass.length < 6) {

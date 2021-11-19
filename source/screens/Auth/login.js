@@ -14,7 +14,13 @@ import LoginWithBtn from '../../components/loginWithButton';
 
 export default function Login(props) {
     const [loading, setLoading] = React.useState(false)
+    const [username, setUsername] = React.useState('')
+    const [password, setPassword] = React.useState('')
+    const [usernameError, setUsernameError] = React.useState('')
+    const [passError, setPassError] = React.useState('')
+
     const { navigation } = props
+
 
     const LoginAcc = (email, password, setAccount) => {
         firebaseApp.auth().signInWithEmailAndPassword(email, password)
@@ -38,81 +44,101 @@ export default function Login(props) {
                 })
             });
     }
+
+    CheckInput = (email, pass) => {
+        if (validateEmail(email) === false) {
+            setUsernameError('Email không hợp lệ')
+            return false
+        }
+        if (checkPassword(pass) === false) {
+            setPassError('Mật khẩu không hợp lệ')
+            return false
+        }
+        return true
+    }
+
+    PressLogin = () => {
+        console.log('log in with', { username, password })
+        if (CheckInput(username, password) === false) {
+            console.log('false')
+            return
+        }
+        setLoading(true)
+        LoginAcc(username, password)
+    }
+
     return (
         <SafeAreaView style={{
             ...globalStyles.container,
             // backgroundColor: '#81ecec'
         }}>
-            <Formik initialValues={{ email: '', pass: '' }}
-                onSubmit={(values) => {
-                    setLoading(true)
-                    if (CheckInput(values.email, values.pass) === false) {
-                        setLoading(false)
-                        return
-                    }
-                    LoginAcc(values.email, values.pass)
-                }}>
-                {({ values, handleChange, handleSubmit, handleBlur }) => (
-                    <ScrollView style={{ flex: 1 }} >
-                        <FlexCard >
-                            {/* // <View> */}
-                            <View style={{ alignSelf: 'center' }} >
-                                <Image source={require('../../../assets/logo.png')} style={{ width: 200, height: 200, borderRadius: 40 }} />
-                            </View>
-                            <TextInputCard title={'Email'} placeholder={'Nhập email'} value={values.email} onChangeValue={handleChange('email')} onBlur={handleBlur('email')} />
-                            <View style={{ height: 10 }} />
-                            <PasswordTextInput title={'Mật khẩu'} placeholder={'Nhập mật khẩu'} value={values.pass} onChangeValue={handleChange('pass')} onBlur={handleBlur('pass')} />
-                            <View style={{ height: 10 }} />
-                            <AuthButton onPress={handleSubmit} title={'Đăng nhập'} />
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                            }} >
-                                <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')} >
-                                    <Text style={{ fontSize: 14, fontWeight: '500', color: '#3399ff' }} >Quên mật khẩu</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => navigation.navigate('SignUp')} >
-                                    <Text style={{ fontSize: 14, fontWeight: '500', color: '#3399ff' }}>Đăng ký</Text>
-                                </TouchableOpacity>
 
-                            </View>
-                            <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: '500' }} > HOẶC </Text>
-                            <LoginWithBtn type={'facebook'} />
-                            <LoginWithBtn type={'google'} />
-                            <LoginWithBtn type={'phone'} />
-                            {loading &&
-                                <LoadingIndicator />
+            <ScrollView style={{ flex: 1 }} >
+                <FlexCard >
+                    {/* // <View> */}
+                    <View style={{ alignSelf: 'center' }} >
+                        <Image source={require('../../../assets/logo.png')} style={{ width: 200, height: 200, borderRadius: 40 }} />
+                    </View>
+                    <TextInputCard title={'Email'} placeholder={'Nhập email'} value={username}
+                        onChangeValue={(value) => {
+                            if (value == '') {
+                                setUsernameError('Vui lòng nhập email')
                             }
-                            {/* </View> */}
-                        </FlexCard>
-                    </ScrollView>
+                            else {
+                                setUsernameError('')
+                            }
+                            setUsername(value)
+                        }} />
 
-                )}
-            </Formik>
+                    <Text style={styles.error} >{usernameError}</Text>
+                    <View style={{ height: 10 }} />
+                    <PasswordTextInput title={'Mật khẩu'} placeholder={'Nhập mật khẩu'} value={password}
+                        onChangeValue={(value) => {
+                            if (value == '') {
+                                setPassError('Vui lòng nhập mật khẩu')
+                            }
+                            else {
+                                setPassError('')
+                            }
+                            setPassword(value)
+                        }} />
+                    <Text style={styles.error} >{passError}</Text>
+
+                    <View style={{ height: 10 }} />
+                    <AuthButton onPress={PressLogin} title={'Đăng nhập'} />
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                    }} >
+                        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')} >
+                            <Text style={{ fontSize: 14, fontWeight: '500', color: '#3399ff' }} >Quên mật khẩu</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigation.navigate('SignUp')} >
+                            <Text style={{ fontSize: 14, fontWeight: '500', color: '#3399ff' }}>Đăng ký</Text>
+                        </TouchableOpacity>
+
+                    </View>
+                    <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: '500' }} > Hoặc tiếp tục với </Text>
+                    <LoginWithBtn type={'facebook'} />
+                    <LoginWithBtn type={'google'} />
+                    <LoginWithBtn type={'phone'} />
+                    {loading &&
+                        <LoadingIndicator />
+                    }
+                    {/* </View> */}
+                </FlexCard>
+            </ScrollView>
+
         </SafeAreaView>)
 }
 
 
+styles = StyleSheet.create({
+    error: { color: 'orange', marginLeft: 10, fontWeight: '500' },
+})
 
-function CheckInput(email, pass) {
-    if (validateEmail(email) === false) {
-        showMessage({
-            message: 'Invalid email',
-            description: 'Check your email and try again!',
-            type: 'warning'
-        })
-        return false
-    }
-    if (checkPassword(pass) === false) {
-        showMessage({
-            message: 'Invalid password',
-            description: 'Password must contain more than 5 characters!',
-            type: 'warning'
-        })
-        return false
-    }
-    return true
-}
+
+
 function checkPassword(pass) {
     if (pass.length < 6) {
         return false
