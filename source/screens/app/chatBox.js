@@ -6,6 +6,7 @@ import { Dialogflow_V2 } from 'react-native-dialogflow';
 import { showMessage } from 'react-native-flash-message';
 import { GetIcon, IconButton } from '../../components/button';
 import Voice from '@react-native-voice/voice';
+// import {per} from 'expo'
 import { renderMessageText, customMessage, customBubble } from '../../components/customChatbox';
 
 const BOT = {
@@ -39,8 +40,6 @@ const requestRecordPermission = async () => {
     }
 };
 
-
-
 export default function ChatboxScreen({ navigation }) {
     const [messages, setMessages] = React.useState([{
         _id: 0,
@@ -48,35 +47,31 @@ export default function ChatboxScreen({ navigation }) {
         createdAt: new Date(),
         user: BOT
     }]);
-    const [isListening, setIsListening] = React.useState(false)
 
+    const [isListening, setIsListening] = React.useState(false);
+    const [msg, setMsg] = React.useState('');
     const [pitch, setPitch] = React.useState('');
     const [error, setError] = React.useState('');
-    const [end, setEnd] = React.useState('');
-    const [started, setStarted] = React.useState('');
-    const [results, setResults] = React.useState([]);
-    const [partialResults, setPartialResults] = React.useState([]);
+    // const [end, setEnd] = React.useState('');
+    // const [started, setStarted] = React.useState('');
+    // const [results, setResults] = React.useState([]);
+    // const [partialResults, setPartialResults] = React.useState([]);
 
     React.useEffect(() => {
-        navigation.setOptions({
-            headerRight: () => (
-                <TouchableOpacity style={{ paddingRight: 7 }} onPress={() => navigation.navigate('History')} >
-                    <GetIcon iconName={'history'} source={'FontAwesome'} />
-                </TouchableOpacity>
-            ),
-        })
+
         Dialogflow_V2.setConfiguration(
             dialogflowConfig.client_email,
             dialogflowConfig.private_key,
             Dialogflow_V2.LANG_ENGLISH_US,
             dialogflowConfig.project_id,
         )
-
         requestRecordPermission()
         Voice.onSpeechStart = onSpeechStart;
         Voice.onSpeechEnd = onSpeechEnd;
         Voice.onSpeechError = onSpeechError;
+        Voice.onSpeechVolumeChanged = onSpeechVolumeChanged;
         Voice.onSpeechResults = onSpeechResults;
+
         // Voice.onSpeechPartialResults = onSpeechPartialResults;
         // Voice.onSpeechVolumeChanged = onSpeechVolumeChanged;
 
@@ -91,13 +86,14 @@ export default function ChatboxScreen({ navigation }) {
     const onSpeechStart = () => {
         //Invoked when .start() is called without error
         console.log('onSpeechStart: ');
-        setStarted('√');
+        // setStarted('√');
     };
 
-    const onSpeechEnd = (e) => {
+    const onSpeechEnd = () => {
         //Invoked when SpeechRecognizer stops recognition
-        console.log('onSpeechEnd: ', e);
-        setEnd('√');
+        console.log('onSpeechEnd: ');
+
+        // setEnd('√');
     };
 
     const onSpeechError = (e) => {
@@ -106,34 +102,41 @@ export default function ChatboxScreen({ navigation }) {
         setError(JSON.stringify(e.error));
     };
 
-    const onSpeechResults = (e) => {
+    const onSpeechResults = (event) => {
         //Invoked when SpeechRecognizer is finished recognizing
-        console.log('onSpeechResults: ', e);
+        console.log('onSpeechResults: ', event);
+        if (isListening)
+            return
+        // setResults(event.value)
+        // let speech = event.value[0];
+        setMsg(event.value[0])
+
         // setResults(e.value);
     };
 
-    const onSpeechPartialResults = (e) => {
-        //Invoked when any results are computed
-        console.log('onSpeechPartialResults: ', e);
-        setPartialResults(e.value);
-    };
+    // const onSpeechPartialResults = (e) => {
+    //     //Invoked when any results are computed
+    //     console.log('onSpeechPartialResults: ', e);
+    //     setPartialResults(e.value);
+    // };
 
     const onSpeechVolumeChanged = (e) => {
         //Invoked when pitch that is recognized changed
-        console.log('onSpeechVolumeChanged: ', e);
+        // console.log('onSpeechVolumeChanged: ', e);
         setPitch(e.value);
     };
 
     const startRecognizing = async () => {
         //Starts listening for speech for a specific locale
         try {
-            await Voice.start('vn');
+            await Voice.start('vi-VN');
+            setIsListening(true);
             setPitch('');
-            setError('');
-            setStarted('');
-            setResults([]);
-            setPartialResults([]);
-            setEnd('');
+            // setError('');
+            // setStarted('');
+            // setResults([]);
+            // setPartialResults([]);
+            // setEnd('');
         } catch (e) {
             //eslint-disable-next-line
             console.error(e);
@@ -144,6 +147,8 @@ export default function ChatboxScreen({ navigation }) {
         //Stops listening for speech
         try {
             await Voice.stop();
+            setIsListening(false);
+            console.log('stop record');
         } catch (e) {
             //eslint-disable-next-line
             console.error(e);
@@ -154,28 +159,31 @@ export default function ChatboxScreen({ navigation }) {
         //Cancels the speech recognition
         try {
             await Voice.cancel();
+            setIsListening(false);
+            setMsg('');
+            console.log('cancel record');
+
         } catch (e) {
             //eslint-disable-next-line
             console.error(e);
         }
     };
 
-    const destroyRecognizer = async () => {
-        //Destroys the current SpeechRecognizer instance
-        try {
-            await Voice.destroy();
-            setPitch('');
-            setError('');
-            setStarted('');
-            setResults([]);
-            setPartialResults([]);
-            setEnd('');
-        } catch (e) {
-            //eslint-disable-next-line
-            console.error(e);
-        }
-    };
-
+    // const destroyRecognizer = async () => {
+    //     //Destroys the current SpeechRecognizer instance
+    //     try {
+    //         await Voice.destroy();
+    //         setPitch('');
+    //         setError('');
+    //         setStarted('');
+    //         setResults([]);
+    //         setPartialResults([]);
+    //         setEnd('');
+    //     } catch (e) {
+    //         //eslint-disable-next-line
+    //         console.error(e);
+    //     }
+    // };
 
     const onSend = React.useCallback((messages = []) => {
         setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
@@ -189,11 +197,18 @@ export default function ChatboxScreen({ navigation }) {
         )
     }, [])
 
+    const clearMsg = () => {
+        setMsg('');
+    }
     const handleResponse = (result) => {
-        // console.log(result)
+        console.log('Response from dialogflow: ')
+        console.log(result)
         let text = result.queryResult.fulfillmentMessages[0].text.text[0]
+        let data = result.queryResult.fulfillmentMessages[1]?.payload.content
+        // console.log(data)
         let msg = {
             _id: result.responseId,
+            data,
             text,
             createdAt: new Date(),
             user: BOT
@@ -209,6 +224,16 @@ export default function ChatboxScreen({ navigation }) {
     }
 
     const CustomButton = (props) => {
+        if (isListening) {
+            return (
+                <View style={{ flexDirection: 'row', padding: 5 }}>
+                    <IconButton iconName={'checksquareo'} source={'AntDesign'} size={24} color={'#3498db'}
+                        onPress={stopRecognizing} />
+                    <IconButton iconName={'cancel-presentation'} source={'MaterialIcons'} size={24} color={'#e74c3c'}
+                        onPress={cancelRecognizing} />
+                </View>
+            )
+        }
         if (props.text == '') {
             return (
                 <View style={{ padding: 5, alignSelf: 'flex-start', flexDirection: 'row' }} >
@@ -221,10 +246,16 @@ export default function ChatboxScreen({ navigation }) {
             )
         } else {
             return (
-                <Send {...props} containerStyle={{ padding: 5, justifyContent: 'flex-start' }} >
-                    <GetIcon iconName={'ios-send-sharp'} source={'Ionicons'} color={'#3399ff'} />
-                </Send>
-
+                <View style={{ flexDirection: 'row', alignItems: 'center' }} >
+                    <View style={{ paddingEnd: 5 }} >
+                        <IconButton iconName={'close-circle-outline'} source={'Ionicons'}
+                            color={'gray'} size={24} onPress={clearMsg} />
+                    </View>
+                    <Send {...props} containerStyle={{ paddingEnd: 7, justifyContent: 'center' }} >
+                        <GetIcon iconName={'ios-send-sharp'} size={24}
+                            source={'Ionicons'} color={'#3399ff'} />
+                    </Send>
+                </View>
             )
         }
     }
@@ -233,6 +264,8 @@ export default function ChatboxScreen({ navigation }) {
     return (
         <SafeAreaView style={styles.container} >
             <GiftedChat
+                text={msg}
+                onInputTextChanged={setMsg}
                 messages={messages}
                 onSend={messages => onSend(messages)}
                 user={{
@@ -241,12 +274,7 @@ export default function ChatboxScreen({ navigation }) {
                 renderSend={CustomButton}
                 // renderMessage={customMessage}
                 renderBubble={customBubble}
-                messagesContainerStyle={{
-                    minHeight: 0,
-                    margin: 0
-                    // maxHeight: 500
-                    // flex: 1,
-                }}
+
                 renderMessageText={renderMessageText}
                 placeholder={'Nhập tin nhắn'}
             // isTyping={true}

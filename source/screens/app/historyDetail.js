@@ -1,105 +1,78 @@
 import React from 'react';
-import { Text, SafeAreaView, FlatList, StyleSheet, View } from 'react-native';
+import { Text, SafeAreaView, FlatList, StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
+import { GetIcon } from '../../components/button';
 import { FlexCard } from '../../components/card';
 import Tag from '../../components/tag';
+import ViewMoreText from 'react-native-view-more-text';
+import ExpandTextView from '../../components/output';
 
 export default function HistoryDetail({ navigation, route }) {
     const data = route.params
     return (
         <SafeAreaView style={globalStyles.container} >
-            <FlexCard>
-                <Text style={globalStyles.title1} >{data.title}</Text>
-                <Tag item={data.date} />
-                <FlatList data={testData} renderItem={getComponent} style={{ margin: 10 }} />
-            </FlexCard>
+            <ScrollView>
+                <FlexCard>
+                    <Text style={globalStyles.title1} >{data.title}</Text>
+                    <Tag item={data.date} />
+                    <ExpandTextView />
+                </FlexCard>
+            </ScrollView>
         </SafeAreaView>
     )
 }
-
-const getComponent = ({ item }) => {
-    // console.log(item)
-    switch (item.type) {
-        case 'paragraph':
-            return getParagraph(item.content)
-
-        case 'list':
-            return getList(item.content)
-        case 'image':
-            return
-        default:
-            return getHeader(item)
-
-    }
-}
-
-const getHeader = (item) => {
-    console.log(item)
-    return (
-        <Text style={getTextStyles(item.type)} >{item.content}</Text>
-    )
-}
-
-const getList = (content) => {
-    return (
-        <FlatList data={content} keyExtractor={(item) => item}
-            renderItem={({ item }) => <View style={{ flexDirection: 'row', alignItems: 'center' }} >
-                <Text style={{ fontSize: 5, marginLeft: 10, marginRight: 5 }}>{'\u2B24'}</Text>
-                <Text>{item}</Text>
-            </View>} />
-    )
-}
-
-const getParagraph = (item) => {
-    const getParagraphText = (paragraphContent) => {
-        var result = [];
-        for (let i = 0; i < paragraphContent.length; i++) {
-            result.push(
-                <Text key={i.toString()} style={getTextStyles(testParagraph[i].type)}>{testParagraph[i].content}</Text>
-            )
-        }
-        return result;
-    }
-    return (
-        <Text style={{ margin: 5 }} >
-            {
-                getParagraphText(item)
-            }
-        </Text>
-    )
-}
-
-const getTextStyles = (type) => {
-    switch (type) {
-        case 'b':
-            return styles.bold
-        case 'i':
-            return styles.italic
-        case 'header1':
-            return styles.header1
-        case 'header2':
-            return styles.header2
-        default:
-            return {
-            }
-    }
-}
-
-const styles = StyleSheet.create({
-    bold: {
-        fontWeight: 'bold'
-    },
-    italic: {
-        fontStyle: 'italic'
-    },
-    header1: {
-        fontSize: 16, fontWeight: '600', margin: 5
-    },
-    header2: {
-        fontSize: 15, fontWeight: '500', margin: 3
-    }
-})
 //https://youmed.vn/tin-tuc/buou-giap-don-thuan/
+const data = [
+    {
+        type: "p",
+        content: "Rối loạn tiền đình là gì?"
+    },
+    {
+        type: "p",
+        content: "Hệ thống tiền đình nằm ở phía sau ốc tai, đóng vai trò quan trọng trong duy trì tư thế thăng bằng, dáng bộ, phối hợp cử động mắt, đầu và thân mình."
+    },
+    {
+        type: "p",
+        content: "Dây thần kinh số 8 là đường truyền dẫn thông tin điều khiển hệ thống tiền đình giữ thăng bằng cho cơ thể. Khi chúng ta di chuyển, cúi, xoay… hệ thống tiền đình sẽ nghiêng, lắc để giữ thăng bằng cho cơ thể."
+
+    },
+    {
+        type: "p",
+        content: "Rối loạn tiền đình là tình trạng tổn thương dây thần kinh số 8 do nhiều nguyên nhân khác nhau khiến thông tin dẫn truyền bị sai lệch làm cho cơ thể mất khả năng kiểm soát thăng bằng, hoa mắt, chóng mặt, ù tai, buồn nôn…"
+    },
+    {
+        type: "p",
+        content: "Ngoài ra, tình trạng tắc nghẽn mạch máu nuôi não hoặc thiếu máu cũng khiến cho hệ thống tiền đình tiếp nhận thông tin chậm hoặc sai lệch từ não bộ, gây hội chứng rối loạn tiền đình."
+    },
+    {
+        type: "p",
+        content: "Rối loạn tiền đình do nguyên nhân gì?"
+    },
+    {
+        type: "p",
+        content: "Bệnh do nhiều nguyên nhân:"
+    },
+    {
+        type: "li",
+        content: "\nViêm tai giữa do nhiễm virus hoặc vi khuẩn ở tai...\n"
+    },
+    {
+        type: "li",
+        content: "\nChấn thương đầu\n"
+    },
+    {
+        type: "li",
+        content: "\nRối loạn tuần hoàn máu như tắc động mạch tiền đình, co thắt động mạch cột sống ảnh hưởng đến tai trong hoặc não\n"
+    },
+    {
+        type: "li",
+        content: "\nBệnh rối loạn tiền đình cũng có thể do các yếu tố di truyền và môi trường sống (ô nhiễm tiếng ồn, stress...)\n"
+    },
+    {
+        type: "p",
+        content: "Theo nghiên cứu cho biết, vấn đề giữ thăng bằng và chóng mặt có thể do việc sử dụng thuốc điều trị đau mạn tính chứ không phải ung thư hoặc các rối loạn thần kinh khác gây ra."
+    }
+]
 const testParagraph = [
     {
         type: 'n',
@@ -133,22 +106,45 @@ const testData =
             content: 'Triệu chứng bướu giáp đơn thuần'
         },
         {
-            type: 'paragraph',
-            content: testParagraph
-        },
-        {
             type: 'header2',
             content: 'Triệu chứng rối loạn chức năng tuyến giáp'
         },
         {
+            type: 'paragraph',
+            content: testParagraph
+        },
+
+        {
             type: 'list',
-            content: ['Khô da, sạm da.',
-                // 'Khô da, sạm da.',
-                // 'Khô da, sạm da.',
-                // 'Nhịp tim chậm.',
-                'Nhịp tim chậm.',
-                // 'Táo bón.',
-                'Táo bón.']
+            content: 'item1'
+        },
+        {
+            type: 'list',
+            content: 'item1'
+        },
+        {
+            type: 'list',
+            content: 'item1'
+        },
+        {
+            type: 'list',
+            content: 'item1'
+        },
+        {
+            type: 'list',
+            content: 'item1'
+        },
+        {
+            type: 'list',
+            content: 'item1'
+        },
+        {
+            type: 'list',
+            content: 'item1'
+        },
+        {
+            type: 'list',
+            content: 'item1'
         },
         {
             type: 'image',

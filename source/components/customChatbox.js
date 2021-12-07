@@ -2,35 +2,12 @@ import React from 'react';
 import { View } from 'react-native';
 import { GetIcon, IconButton } from './button';
 import { Message, Bubble } from 'react-native-gifted-chat';
-import FlexText from './expandText';
+import ExpandTextView from './output';
 
 export const renderMessageText = (props) => {
 
     return (
-        <FlexText currentMessage={props.currentMessage} />
-    )
-}
-
-export const customMessage = (props) => {
-    const isUser = props.currentMessage.user._id == 1
-    return (
-        <View
-        // style={{ flexDirection: 'row', alignItems: 'center', width: '96%' }}
-        >
-            {isUser &&
-                <View style={{ margin: 5 }} >
-                    <IconButton iconName={'text-to-speech'}
-                        source={'MaterialCommunityIcons'} size={30} />
-                </View>
-            }
-            <Message {...props} />
-            {!isUser &&
-                <View style={{ margin: 5 }} >
-                    <IconButton iconName={'text-to-speech'}
-                        source={'MaterialCommunityIcons'} size={30} />
-                </View>
-            }
-        </View>
+        <ExpandTextView currentMessage={props.currentMessage} />
     )
 }
 
