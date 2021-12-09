@@ -48,12 +48,11 @@ export default function ChatboxScreen({ navigation }) {
         user: BOT
     }]);
 
+    const [isTyping, setIsTyping] = React.useState(false);
     const [isListening, setIsListening] = React.useState(false);
     const [msg, setMsg] = React.useState('');
     const [pitch, setPitch] = React.useState('');
     const [error, setError] = React.useState('');
-    // const [end, setEnd] = React.useState('');
-    // const [started, setStarted] = React.useState('');
     // const [results, setResults] = React.useState([]);
     // const [partialResults, setPartialResults] = React.useState([]);
 
@@ -71,7 +70,7 @@ export default function ChatboxScreen({ navigation }) {
         Voice.onSpeechError = onSpeechError;
         Voice.onSpeechVolumeChanged = onSpeechVolumeChanged;
         Voice.onSpeechResults = onSpeechResults;
-
+        Voice.destroy = destroyRecognizer;
         // Voice.onSpeechPartialResults = onSpeechPartialResults;
         // Voice.onSpeechVolumeChanged = onSpeechVolumeChanged;
 
@@ -86,14 +85,12 @@ export default function ChatboxScreen({ navigation }) {
     const onSpeechStart = () => {
         //Invoked when .start() is called without error
         console.log('onSpeechStart: ');
-        // setStarted('√');
     };
 
     const onSpeechEnd = () => {
         //Invoked when SpeechRecognizer stops recognition
         console.log('onSpeechEnd: ');
 
-        // setEnd('√');
     };
 
     const onSpeechError = (e) => {
@@ -107,11 +104,8 @@ export default function ChatboxScreen({ navigation }) {
         console.log('onSpeechResults: ', event);
         if (isListening)
             return
-        // setResults(event.value)
         // let speech = event.value[0];
         setMsg(event.value[0])
-
-        // setResults(e.value);
     };
 
     // const onSpeechPartialResults = (e) => {
@@ -132,11 +126,7 @@ export default function ChatboxScreen({ navigation }) {
             await Voice.start('vi-VN');
             setIsListening(true);
             setPitch('');
-            // setError('');
-            // setStarted('');
-            // setResults([]);
-            // setPartialResults([]);
-            // setEnd('');
+            setError('');
         } catch (e) {
             //eslint-disable-next-line
             console.error(e);
@@ -169,25 +159,29 @@ export default function ChatboxScreen({ navigation }) {
         }
     };
 
-    // const destroyRecognizer = async () => {
-    //     //Destroys the current SpeechRecognizer instance
-    //     try {
-    //         await Voice.destroy();
-    //         setPitch('');
-    //         setError('');
-    //         setStarted('');
-    //         setResults([]);
-    //         setPartialResults([]);
-    //         setEnd('');
-    //     } catch (e) {
-    //         //eslint-disable-next-line
-    //         console.error(e);
-    //     }
-    // };
+    const destroyRecognizer = async () => {
+        //Destroys the current SpeechRecognizer instance
+        try {
+            await Voice.destroy();
+            setPitch('');
+            setError('');
+        } catch (e) {
+            //eslint-disable-next-line
+            console.error(e);
+        }
+    };
 
     const onSend = React.useCallback((messages = []) => {
+        if (isTyping) {
+            showMessage({
+                message: 'Xin chờ tôi một chút!',
+                type: 'warning'
+            })
+            return;
+        }
         setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
         const msg = messages[0].text
+        setIsTyping(true);
         Dialogflow_V2.requestQuery(msg,
             (result) => handleResponse(result),
             (error) => {
@@ -217,10 +211,9 @@ export default function ChatboxScreen({ navigation }) {
     }
 
     const botReply = (msg) => {
-
         // console.log(msg)
         setMessages(previousMessages => GiftedChat.append(previousMessages, msg))
-
+        setIsTyping(false);
     }
 
     const CustomButton = (props) => {
@@ -274,7 +267,7 @@ export default function ChatboxScreen({ navigation }) {
                 renderSend={CustomButton}
                 // renderMessage={customMessage}
                 renderBubble={customBubble}
-
+                isTyping={isTyping}
                 renderMessageText={renderMessageText}
                 placeholder={'Nhập tin nhắn'}
             // isTyping={true}
