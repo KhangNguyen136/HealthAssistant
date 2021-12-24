@@ -13,6 +13,9 @@ export const renderMessageText = (props) => {
 
 export const customBubble = (props) => {
     const isUser = props.currentMessage.user._id == 1
+    const toSpeech = () => {
+
+    }
     return (
         <View
             style={{
@@ -24,7 +27,7 @@ export const customBubble = (props) => {
             {isUser &&
                 <View style={{ marginRight: -50 }} >
                     <IconButton iconName={'text-to-speech'}
-                        source={'MaterialCommunityIcons'} size={24} />
+                        source={'MaterialCommunityIcons'} size={22} />
                 </View>
             }
             <View  >
@@ -38,4 +41,12 @@ export const customBubble = (props) => {
             }
         </View>
     )
+}
+
+function getText(content) {
+    var result = '';
+    for (let i = 0; i < content.length; i++) {
+        result += content[i].content;
+    }
+    return result;
 }

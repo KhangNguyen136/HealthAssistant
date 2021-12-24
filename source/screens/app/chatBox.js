@@ -6,6 +6,7 @@ import { Dialogflow_V2 } from 'react-native-dialogflow';
 import { showMessage } from 'react-native-flash-message';
 import { GetIcon, IconButton } from '../../components/button';
 import Voice from '@react-native-voice/voice';
+import NetInfo from '@react-native-community/netinfo';
 // import {per} from 'expo'
 import { renderMessageText, customMessage, customBubble } from '../../components/customChatbox';
 
@@ -41,29 +42,46 @@ const requestRecordPermission = async () => {
 };
 
 export default function ChatboxScreen({ navigation }) {
-    const [messages, setMessages] = React.useState([{
-        _id: 0,
-        text: 'Xin chào! Tôi có thể giúp gì được cho bạn?',
-        createdAt: new Date(),
-        user: BOT
-    }]);
-
+    var [isSetupDialogflow, setIsSetupDialogflow] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [isOffline, setIsOffline] = React.useState(true);
+    const [messages, setMessages] = React.useState([helloMsg]);
     const [isTyping, setIsTyping] = React.useState(false);
     const [isListening, setIsListening] = React.useState(false);
     const [msg, setMsg] = React.useState('');
     const [pitch, setPitch] = React.useState('');
-    const [error, setError] = React.useState('');
     // const [results, setResults] = React.useState([]);
     // const [partialResults, setPartialResults] = React.useState([]);
+    const setUpDialogflow = () => {
+
+    }
+    React.useEffect(() => {
+        console.log({ isOffline, isSetupDialogflow });
+        if (!isSetupDialogflow && !isOffline) {
+            Dialogflow_V2.setConfiguration(
+                dialogflowConfig.client_email,
+                dialogflowConfig.private_key,
+                Dialogflow_V2.LANG_ENGLISH_US,
+                dialogflowConfig.project_id,
+            )
+            const permanentContexts = [{
+                name: "Auth",
+                // lifespan 1 is set automatically, but it's overrideable
+                parameters: {
+                    AccessToken: "1234yo1234"
+                }
+            }];
+            Dialogflow_V2.setPermanentContexts(permanentContexts);
+            setIsSetupDialogflow(true);
+        }
+    }, [isOffline])
 
     React.useEffect(() => {
-
-        Dialogflow_V2.setConfiguration(
-            dialogflowConfig.client_email,
-            dialogflowConfig.private_key,
-            Dialogflow_V2.LANG_ENGLISH_US,
-            dialogflowConfig.project_id,
-        )
+        const removeNetInfoSub = NetInfo.addEventListener((state) => {
+            const offline = !(state.isConnected && state.isInternetReachable);
+            setIsOffline(offline);
+            setIsLoading(false);
+        });
         requestRecordPermission()
         Voice.onSpeechStart = onSpeechStart;
         Voice.onSpeechEnd = onSpeechEnd;
@@ -77,6 +95,7 @@ export default function ChatboxScreen({ navigation }) {
         return () => {
             //destroy the process after switching the screen
             Voice.destroy().then(Voice.removeAllListeners);
+            removeNetInfoSub();
         };
     }, [])
 
@@ -90,13 +109,13 @@ export default function ChatboxScreen({ navigation }) {
     const onSpeechEnd = () => {
         //Invoked when SpeechRecognizer stops recognition
         console.log('onSpeechEnd: ');
-
     };
 
     const onSpeechError = (e) => {
         //Invoked when an error occurs.
         console.log('onSpeechError: ', e);
-        setError(JSON.stringify(e.error));
+        // setError(JSON.stringify(e.error));
+        // showMessage({ type: 'danger', description: 'Chức năng không khả thi trên ứng dụng này' })
     };
 
     const onSpeechResults = (event) => {
@@ -107,12 +126,6 @@ export default function ChatboxScreen({ navigation }) {
         // let speech = event.value[0];
         setMsg(event.value[0])
     };
-
-    // const onSpeechPartialResults = (e) => {
-    //     //Invoked when any results are computed
-    //     console.log('onSpeechPartialResults: ', e);
-    //     setPartialResults(e.value);
-    // };
 
     const onSpeechVolumeChanged = (e) => {
         //Invoked when pitch that is recognized changed
@@ -126,7 +139,7 @@ export default function ChatboxScreen({ navigation }) {
             await Voice.start('vi-VN');
             setIsListening(true);
             setPitch('');
-            setError('');
+            // setError('');
         } catch (e) {
             //eslint-disable-next-line
             console.error(e);
@@ -156,6 +169,7 @@ export default function ChatboxScreen({ navigation }) {
         } catch (e) {
             //eslint-disable-next-line
             console.error(e);
+            // showMessage({ type: 'danger', description: 'Có lỗi đang xảy ra, vui lòng thử lại!' })
         }
     };
 
@@ -164,29 +178,29 @@ export default function ChatboxScreen({ navigation }) {
         try {
             await Voice.destroy();
             setPitch('');
-            setError('');
+            // setError('');
         } catch (e) {
             //eslint-disable-next-line
             console.error(e);
         }
     };
 
+
+
     const onSend = React.useCallback((messages = []) => {
-        if (isTyping) {
-            showMessage({
-                message: 'Xin chờ tôi một chút!',
-                type: 'warning'
-            })
-            return;
-        }
-        setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
         const msg = messages[0].text
         setIsTyping(true);
         Dialogflow_V2.requestQuery(msg,
-            (result) => handleResponse(result),
+            (result) => {
+                setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
+                handleResponse(result);
+                setIsOffline(false);
+            },
             (error) => {
                 console.log(error.message)
-                showMessage({ message: 'Gửi thất bại', description: error.message, type: 'danger' })
+                showMessage({ message: 'Gửi thất bại', description: 'Vui lòng thử lại!', type: 'danger' })
+                setMsg(msg);
+                setIsTyping(false);
             }
         )
     }, [])
@@ -197,23 +211,49 @@ export default function ChatboxScreen({ navigation }) {
     const handleResponse = (result) => {
         console.log('Response from dialogflow: ')
         console.log(result)
-        let text = result.queryResult.fulfillmentMessages[0].text.text[0]
-        let data = result.queryResult.fulfillmentMessages[1]?.payload.content
-        // console.log(data)
-        let msg = {
-            _id: result.responseId,
-            data,
-            text,
-            createdAt: new Date(),
-            user: BOT
+        // const msg = msgForm;
+        try {
+            const webhoookStt = result.webhookStatus
+            if (webhoookStt?.code != undefined) {
+                throw new Error();
+            }
+            let text = result.queryResult.fulfillmentMessages[0].text.text[0];
+            let data = result.queryResult.fulfillmentMessages[1]?.payload.content;
+            // console.log(data)
+            let msg = {
+                _id: result.responseId,
+                data,
+                text,
+                createdAt: new Date(),
+                user: BOT
+            }
+
+            botReply(msg);
+        } catch (error) {
+            console.log(error);
+            console.log(messages[messages.length - 1]);
+            let msg = {
+                _id: result.responseId,
+                text: 'Hệ thống đang gặp trục trặc, xin vui lòng thử lại sau!',
+                createdAt: new Date(),
+                user: BOT
+            }
+            botReply(msg);
         }
-        botReply(msg)
+
     }
 
     const botReply = (msg) => {
         // console.log(msg)
         setMessages(previousMessages => GiftedChat.append(previousMessages, msg))
         setIsTyping(false);
+    }
+
+    const retryConnection = () => {
+        NetInfo.fetch().then(state => {
+            setIsOffline(!state.isConnected);
+            console.log(state.isConnected);
+        })
     }
 
     const CustomButton = (props) => {
@@ -253,14 +293,41 @@ export default function ChatboxScreen({ navigation }) {
         }
     }
 
+    const clickSend = (msg) => {
+        console.log(msg[0].text);
+        // if (isOffline) {
+        //     showMessage({
+        //         type: 'danger', message: 'Không có kết nối internet, xin vui lòng kiểm tra và thử lại!'
+        //     })
+        //     setMsg(msg[0].text);
+        //     return;
+        // }
+        if (isTyping) {
+            showMessage({
+                message: 'Xin hãy chờ tôi một chút!',
+                type: 'warning'
+            })
+            setMsg(msg[0].text);
+            return;
+        }
+        onSend(msg);
+    }
 
     return (
         <SafeAreaView style={styles.container} >
+            {
+                isOffline &&
+                <View style={styles.noInternetContainer} >
+                    <Text style={styles.noInternet}>Không có kết nối internet</Text>
+                    {/* <IconButton iconName={'reload'} source={'Ionicons'} onPress={retryConnection} size={18} /> */}
+
+                </View>
+            }
             <GiftedChat
                 text={msg}
                 onInputTextChanged={setMsg}
                 messages={messages}
-                onSend={messages => onSend(messages)}
+                onSend={messages => clickSend(messages)}
                 user={{
                     _id: 1,
                 }}
@@ -281,4 +348,27 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
+    noInternet: {
+        fontSize: 15,
+        fontWeight: '600', color: 'red', textAlign: 'center',
+
+    },
+    noInternetContainer: {
+        backgroundColor: '#b2bec3', width: '100%', justifyContent: 'center',
+        flexDirection: 'row', padding: 6, alignItems: 'center'
+    }
 });
+
+const helloMsg = {
+    _id: 0,
+    text: 'Xin chào! Tôi có thể giúp gì được cho bạn?',
+    createdAt: new Date(),
+    user: BOT
+}
+
+const msgForm = {
+    _id: -1,
+    text: '',
+    createdAt: undefined,
+    user: undefined,
+}

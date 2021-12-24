@@ -21,7 +21,7 @@ export default function ExpandTextView({ currentMessage, maxHeight = 300 }) {
     }
 
     const onLayoutView = (event) => {
-        console.log(event.nativeEvent.layout.height);
+        // console.log(event.nativeEvent.layout.height);
         const contentHeight = event.nativeEvent.layout.height;
         if (contentHeight > maxHeight) {
             setIsLongData(true)
@@ -61,61 +61,65 @@ export default function ExpandTextView({ currentMessage, maxHeight = 300 }) {
     const getContent = (data) => {
         var result = []
         for (let i = 0; i < data.length; i++) {
-            result.push(getComponent(data[i]))
+            result.push(getComponent(data[i], i))
         }
         return result;
     }
 
-    const getComponent = (item) => {
+    const getComponent = (item, id) => {
         // console.log(item)
         switch (item.type) {
             case 'p':
-                return getParagraph(item.content)
+                return getParagraph(item.content, id)
             case 'li':
-                return getList(item.content)
+                return getList(item.content, id)
             case 'li1':
-                return getList1(item.content)
+                return getList1(item.content, id)
             case 'image':
                 return
             case 'single':
-                return (<Text>{item.content}</Text>)
+                return (<Text style={{ fontSize: 14 }} key={id}>{item.content}</Text>)
             default:
-                return getHeader(item)
+                return getHeader(item, id)
 
         }
     }
 
-    const getHeader = (item) => {
+    const getHeader = (item, id) => {
         return (
-            <Text style={getTextStyles(item.type)} >{item.content}</Text>
+            <Text key={id} style={getTextStyles(item.type)} >{item.content}</Text>
         )
     }
 
-    const getList = (item) => {
+    const getList = (item, id) => {
         return (
-            <Text style={{
-                textAlignVertical: 'center', fontSize: 15,
-                lineHeight: 20,
-                marginLeft: 5, color: textColor
-            }}> <Text style={{ fontSize: 15 }} >{'\u2B25'}</Text> {item}</Text>
+            <Text key={id}
+                style={{
+                    textAlignVertical: 'center', fontSize: 15,
+                    lineHeight: 20,
+                    marginLeft: 10, color: textColor,
+                    // alignItems: 'center'
+                }}> <Text style={{ fontSize: 13, }} >{'\u2B25'}</Text> {item.substr(1, item.length - 2)}</Text>
         )
     }
 
-    const getList1 = (item) => {
+    const getList1 = (item, id) => {
         return (
             // <View style={{ marginLeft: 10, marginTop: 5 }} >
-            <Text style={{
-                textAlignVertical: 'center', fontSize: 15,
-                marginLeft: 16, lineHeight: 20
-            }}> <Text style={{ fontSize: 14 }} >{'\u2B26'}</Text> {item}</Text>
+            <Text key={id}
+                style={{
+                    textAlignVertical: 'center', fontSize: 15,
+                    marginLeft: 16, lineHeight: 20
+
+                }}> <Text style={{ fontSize: 14 }} >{'\u2B26'}</Text> {item}</Text>
             // </View>
         )
     }
 
-    const getParagraph = (item) => {
+    const getParagraph = (item, id) => {
 
         return (
-            <Text style={{ lineHeight: 20, fontSize: 16, marginVertical: 4 }}  >
+            <Text key={id} style={{ lineHeight: 20, fontSize: 16, marginVertical: 4 }}  >
                 {"  " + item}
                 {/* {'\n'} */}
             </Text>
@@ -180,82 +184,3 @@ const styles = StyleSheet.create({
         marginBottom: 8
     }
 })
-
-
-const longData =
-    [
-        {
-            type: 'header1',
-            content: 'Triệu chứng bướu giáp đơn thuần'
-        },
-        {
-            type: 'p',
-            content: 'Tình trạng này thường đi kèm với các triệu chứng như giảm trí nhớ, rối loạn chức năng các cơ quan, tính cáu gắt khó chịu,…'
-        },
-        {
-            type: 'p',
-            content: 'Tình trạng này thường đi kèm với các triệu chứng như giảm trí nhớ, rối loạn chức năng các cơ quan, tính cáu gắt khó chịu,…'
-        },
-        {
-            type: 'p',
-            content: 'Tình trạng này thường đi kèm với các triệu chứng như giảm trí nhớ, rối loạn chức năng các cơ quan, tính cáu gắt khó chịu,…'
-        },
-        {
-            type: 'header2',
-            content: 'Triệu chứng rối loạn chức năng tuyến giáp'
-        },
-        {
-            type: 'li',
-            content: 'Item1'
-        },
-        {
-            type: 'li',
-            content: 'Item2'
-        },
-        {
-            type: 'li1',
-            content: 'Item 2.1'
-        },
-        {
-            type: 'li1',
-            content: 'Item 2.2'
-        },
-        {
-            type: 'li',
-            content: 'Item3'
-        },
-        {
-            type: 'li',
-            content: 'Item4'
-        },
-        {
-            type: 'li1',
-            content: 'Item 4.1'
-        },
-        {
-            type: 'li1',
-            content: 'Item 4.2'
-        },
-        {
-            type: 'li1',
-            content: 'Item 4.3'
-        },
-
-    ]
-
-const shortData =
-    [
-        {
-            type: 'header1',
-            content: 'Triệu chứng bướu giáp đơn thuần'
-        },
-        {
-            type: 'p',
-            content: 'Tình trạng này thường đi kèm với các triệu chứng như giảm trí nhớ, rối loạn chức năng các cơ quan, tính cáu gắt khó chịu,…'
-        },
-
-        {
-            type: 'header2',
-            content: 'Triệu chứng rối loạn chức năng tuyến giáp'
-        },
-    ]
