@@ -4,13 +4,15 @@ import ListHistory from '../../components/list/listHistory';
 import Card from '../../components/card';
 import SearchBox from '../../components/searchBar';
 import Filter from '../../components/filter';
+import { globalStyles } from '../../styles/globalStyles';
+import LoadingIndicator from '../../components/loadingIndicator';
 
 export default function BookingHistory() {
     const [searchKey, setSearchKey] = React.useState('')
     const [type, setType] = React.useState('Loại tra cứu')
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={globalStyles.container}>
             <Card>
                 <SearchBox value={searchKey} textChange={setSearchKey} placeholder={'Tìm kiếm theo nội dung'} />
                 <View style={{ marginHorizontal: 5 }} >
@@ -20,6 +22,7 @@ export default function BookingHistory() {
             <ListHistory filter={{
                 search: searchKey, type: type
             }} />
+            <LoadingIndicator text='Comming soon' />
         </SafeAreaView>
     )
 }

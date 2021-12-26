@@ -50,11 +50,7 @@ export default function ChatboxScreen({ navigation }) {
     const [isListening, setIsListening] = React.useState(false);
     const [msg, setMsg] = React.useState('');
     const [pitch, setPitch] = React.useState('');
-    // const [results, setResults] = React.useState([]);
-    // const [partialResults, setPartialResults] = React.useState([]);
-    const setUpDialogflow = () => {
 
-    }
     React.useEffect(() => {
         console.log({ isOffline, isSetupDialogflow });
         if (!isSetupDialogflow && !isOffline) {
@@ -98,8 +94,6 @@ export default function ChatboxScreen({ navigation }) {
             removeNetInfoSub();
         };
     }, [])
-
-
 
     const onSpeechStart = () => {
         //Invoked when .start() is called without error
@@ -185,14 +179,20 @@ export default function ChatboxScreen({ navigation }) {
         }
     };
 
+    const popLastMessages = () => {
+        setMessages(previousMessages => {
+            console.log(previousMessages.slice(1, previousMessages.length));
+            return previousMessages.slice(1, previousMessages.length);
+        });
+    }
 
-
-    const onSend = React.useCallback((messages = []) => {
-        const msg = messages[0].text
+    const onSend = React.useCallback(async (messages = []) => {
+        // console.log(messages);
+        const msg = messages[0].text;
+        setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
         setIsTyping(true);
         Dialogflow_V2.requestQuery(msg,
             (result) => {
-                setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
                 handleResponse(result);
                 setIsOffline(false);
             },
@@ -201,6 +201,7 @@ export default function ChatboxScreen({ navigation }) {
                 showMessage({ message: 'Gửi thất bại', description: 'Vui lòng thử lại!', type: 'danger' })
                 setMsg(msg);
                 setIsTyping(false);
+                popLastMessages();
             }
         )
     }, [])
@@ -219,7 +220,6 @@ export default function ChatboxScreen({ navigation }) {
             }
             let text = result.queryResult.fulfillmentMessages[0].text.text[0];
             let data = result.queryResult.fulfillmentMessages[1]?.payload.content;
-            // console.log(data)
             let msg = {
                 _id: result.responseId,
                 data,
@@ -294,14 +294,6 @@ export default function ChatboxScreen({ navigation }) {
     }
 
     const clickSend = (msg) => {
-        console.log(msg[0].text);
-        // if (isOffline) {
-        //     showMessage({
-        //         type: 'danger', message: 'Không có kết nối internet, xin vui lòng kiểm tra và thử lại!'
-        //     })
-        //     setMsg(msg[0].text);
-        //     return;
-        // }
         if (isTyping) {
             showMessage({
                 message: 'Xin hãy chờ tôi một chút!',

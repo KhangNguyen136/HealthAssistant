@@ -139,7 +139,7 @@ export default function SignUp() {
                     <TextInputCard title={'Tên hiển thị'} placeholder={'Nhập tên bạn muốn sử dụng'} value={displayName}
                         onChangeValue={(value) => {
                             if (value == '') {
-                                setDisplayNameError('Xác nhận mật khẩu không trùng khớp')
+                                setDisplayNameError('Vui lòng nhập tên hiển thị')
                             }
                             else {
                                 setDisplayNameError('')

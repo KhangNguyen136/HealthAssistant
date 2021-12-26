@@ -53,7 +53,7 @@ export default function ListHistory({ data, filter = defaultFilter }) {
 
     }
     const toDetail = (item) => {
-        navigation.navigate('HistoryDetail', { title: item.title, date: item.date.toString().substr(0, 16) })
+        // navigation.navigate('HistoryDetail', { title: item.title, date: item.date.toString().substr(0, 16) })
     }
 
     const Item = ({ item }) => {

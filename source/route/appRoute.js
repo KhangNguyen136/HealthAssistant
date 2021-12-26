@@ -25,7 +25,9 @@ export default function AppRoute() {
         setIsLoggedIn(stt)
         setIsLoading(false)
     }
-
+    // return (
+    //     <SplashScreen />
+    // )
     if (isLoading) {
         return (
             <SplashScreen />

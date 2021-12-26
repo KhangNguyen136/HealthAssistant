@@ -25,14 +25,14 @@ const CustomSidebarMenu = (props) => {
         firebaseApp.auth().signOut().then(() => {
             console.log("Logged out successfully")
             showMessage({
-                message: "Logged out sucessfully",
+                message: "Đăng xuất thành công",
                 type: 'success'
             })
 
         }).catch((error) => {
             console.log('Log out failed', error.message)
             showMessage({
-                message: 'Action failed',
+                message: 'Đăng xuất thất bại',
                 description: error.message,
                 type: 'danger'
             })

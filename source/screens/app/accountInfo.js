@@ -8,6 +8,7 @@ import TextInputCard from '../../components/TextInputCard';
 import { globalStyles } from '../../styles/globalStyles';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { showMessage } from 'react-native-flash-message';
+import LoadingIndicator from '../../components/loadingIndicator';
 
 var options = {
     title: 'Select Image',
@@ -49,7 +50,7 @@ export default function UserInfo({ navigation }) {
     }
     return (
         <SafeAreaView style={globalStyles.container} >
-            <ScrollView>
+            {/* <ScrollView>
                 <Card>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }} >
                         <TouchableOpacity style={{ alignItems: 'center', marginHorizontal: 10, marginVertical: 2 }} onPress={editAvt} >
@@ -71,21 +72,18 @@ export default function UserInfo({ navigation }) {
                 </Card>
                 <Card>
                     <TextInputCard title={'Name'} placeholder={'Enter your name'} />
-                    {/* </Card>
-            <Card> */}
+                    
                     <TextInputCard title={'Phone number'} keyboardType={'phone-pad'} placeholder={'Enter your phone number'} />
-                    {/* </Card>
-            <Card> */}
+                    
                     <TextInputCard title={'Email'} placeholder={'Enter your email'} />
                 </Card>
-                {/* <Card>
-                    <CountryPicker value={country} didSelect={setCountry} />
-                </Card> */}
+                
                 <Card>
                     <MyDatePicker title={'Birthday'} />
                 </Card>
                 <MyButton moreStyle={{ ...globalStyles.authBtnContainer, width: '69%' }} title={'Save'} moreTitleStyle={{ color: 'white' }} />
-            </ScrollView>
+            </ScrollView> */}
+            <LoadingIndicator text='Comming soon' />
         </SafeAreaView>
     )
 }

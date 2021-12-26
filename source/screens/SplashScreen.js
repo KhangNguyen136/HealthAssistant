@@ -8,7 +8,7 @@ const SplashScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Image
         source={require('../../assets/logo.png')}
-        style={{ width: '90%', resizeMode: 'contain', margin: 30 }}
+        style={{ width: 249, height: 249, resizeMode: 'cover', margin: 20, borderRadius: 30 }}
       />
       <ActivityIndicator
         animating={true}

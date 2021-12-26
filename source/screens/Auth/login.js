@@ -91,7 +91,6 @@ export default function Login(props) {
                         }} />
 
                     <Text style={styles.error} >{usernameError}</Text>
-                    <View style={{ height: 10 }} />
                     <PasswordTextInput title={'Mật khẩu'} placeholder={'Nhập mật khẩu'} value={password}
                         onChangeValue={(value) => {
                             if (value == '') {
@@ -104,7 +103,6 @@ export default function Login(props) {
                         }} />
                     <Text style={styles.error} >{passError}</Text>
 
-                    <View style={{ height: 10 }} />
                     <AuthButton onPress={PressLogin} title={'Đăng nhập'} />
                     <View style={{
                         flexDirection: 'row',

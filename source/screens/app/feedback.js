@@ -1,10 +1,12 @@
 import React from 'react';
 import { Text, SafeAreaView } from 'react-native';
+import LoadingIndicator from '../../components/loadingIndicator';
+import { globalStyles } from '../../styles/globalStyles';
 
 export default function FeedbackScreen() {
     return (
-        <SafeAreaView>
-            <Text>Feedback</Text>
+        <SafeAreaView style={globalStyles.container}>
+            <LoadingIndicator text='Comming soon' />
         </SafeAreaView>
     )
 }

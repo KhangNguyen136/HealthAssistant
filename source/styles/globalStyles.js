@@ -5,6 +5,8 @@ export const globalStyles = StyleSheet.create(
         container: {
             flex: 1,
             alignSelf: 'center',
+            alignContent: 'center',
+            // justifyContent: 'center',
             width: '100%',
         },
         loading: {
