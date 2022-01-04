@@ -7,9 +7,8 @@ import { showMessage } from 'react-native-flash-message';
 import { GetIcon, IconButton } from '../../components/button';
 import Voice from '@react-native-voice/voice';
 import NetInfo from '@react-native-community/netinfo';
-// import {per} from 'expo'
 import { renderMessageText, customMessage, customBubble } from '../../components/customChatbox';
-
+import Spinner from 'react-native-spinkit';
 const BOT = {
     _id: 2,
     name: 'Bot',
@@ -24,8 +23,7 @@ const requestRecordPermission = async () => {
             PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
             {
                 title: "Yêu cầu quyền ghi âm",
-                message:
-                    "Chúng tôi cần quyền ghi âm để sử dụng chức năng nói chuyện bằng giọng nói.",
+                message: "Chúng tôi cần quyền ghi âm để sử dụng chức năng nói chuyện bằng giọng nói.",
                 buttonNeutral: "Hỏi tôi sau",
                 buttonNegative: "Từ chối",
                 buttonPositive: "Chấp nhận"
@@ -43,14 +41,17 @@ const requestRecordPermission = async () => {
 
 export default function ChatboxScreen({ navigation }) {
     var [isSetupDialogflow, setIsSetupDialogflow] = React.useState(false);
-    const [isLoading, setIsLoading] = React.useState(true);
+    const [isLoading, setLoading] = React.useState(true)
+    const [msgSpeakingId, setMsgSpeakingId] = React.useState('');
     const [isOffline, setIsOffline] = React.useState(true);
     const [messages, setMessages] = React.useState([helloMsg]);
     const [isTyping, setIsTyping] = React.useState(false);
     const [isListening, setIsListening] = React.useState(false);
     const [msg, setMsg] = React.useState('');
-    const [pitch, setPitch] = React.useState('');
 
+    const [textToSpeechAudio, setTextToSpeechAudio] = React.useState(undefined);
+    // const [pitch, setPitch] = React.useState('');
+    //set up dialogflow server
     React.useEffect(() => {
         console.log({ isOffline, isSetupDialogflow });
         if (!isSetupDialogflow && !isOffline) {
@@ -60,35 +61,36 @@ export default function ChatboxScreen({ navigation }) {
                 Dialogflow_V2.LANG_ENGLISH_US,
                 dialogflowConfig.project_id,
             )
-            const permanentContexts = [{
-                name: "Auth",
-                // lifespan 1 is set automatically, but it's overrideable
-                parameters: {
-                    AccessToken: "1234yo1234"
-                }
-            }];
-            Dialogflow_V2.setPermanentContexts(permanentContexts);
+            // const permanentContexts = [{
+            //     name: "Auth",
+            //     // lifespan 1 is set automatically, but it's overrideable
+            //     parameters: {
+            //         AccessToken: "1234yo1234"
+            //     }
+            // }];
+            // Dialogflow_V2.setPermanentContexts(permanentContexts);
             setIsSetupDialogflow(true);
         }
     }, [isOffline])
 
+    //set up network info and voice services
     React.useEffect(() => {
         const removeNetInfoSub = NetInfo.addEventListener((state) => {
             const offline = !(state.isConnected && state.isInternetReachable);
             setIsOffline(offline);
-            setIsLoading(false);
+            setLoading(false);
         });
         requestRecordPermission()
         Voice.onSpeechStart = onSpeechStart;
         Voice.onSpeechEnd = onSpeechEnd;
         Voice.onSpeechError = onSpeechError;
-        Voice.onSpeechVolumeChanged = onSpeechVolumeChanged;
+        // Voice.onSpeechVolumeChanged = onSpeechVolumeChanged;
         Voice.onSpeechResults = onSpeechResults;
         Voice.destroy = destroyRecognizer;
         // Voice.onSpeechPartialResults = onSpeechPartialResults;
         // Voice.onSpeechVolumeChanged = onSpeechVolumeChanged;
 
-        return () => {
+        return async () => {
             //destroy the process after switching the screen
             Voice.destroy().then(Voice.removeAllListeners);
             removeNetInfoSub();
@@ -109,7 +111,7 @@ export default function ChatboxScreen({ navigation }) {
         //Invoked when an error occurs.
         console.log('onSpeechError: ', e);
         // setError(JSON.stringify(e.error));
-        // showMessage({ type: 'danger', description: 'Chức năng không khả thi trên ứng dụng này' })
+        showMessage({ type: 'danger', description: 'Có lỗi đã xảy ra, xin vui lòng thử lại!' })
     };
 
     const onSpeechResults = (event) => {
@@ -121,11 +123,11 @@ export default function ChatboxScreen({ navigation }) {
         setMsg(event.value[0])
     };
 
-    const onSpeechVolumeChanged = (e) => {
-        //Invoked when pitch that is recognized changed
-        // console.log('onSpeechVolumeChanged: ', e);
-        setPitch(e.value);
-    };
+    // const onSpeechVolumeChanged = (e) => {
+    //     //Invoked when pitch that is recognized changed
+    //     // console.log('onSpeechVolumeChanged: ', e);
+    //     setPitch(e.value);
+    // };
 
     const startRecognizing = async () => {
         //Starts listening for speech for a specific locale
@@ -171,7 +173,7 @@ export default function ChatboxScreen({ navigation }) {
         //Destroys the current SpeechRecognizer instance
         try {
             await Voice.destroy();
-            setPitch('');
+            // setPitch('');
             // setError('');
         } catch (e) {
             //eslint-disable-next-line
@@ -227,7 +229,6 @@ export default function ChatboxScreen({ navigation }) {
                 createdAt: new Date(),
                 user: BOT
             }
-
             botReply(msg);
         } catch (error) {
             console.log(error);
@@ -315,6 +316,15 @@ export default function ChatboxScreen({ navigation }) {
 
                 </View>
             }
+            {
+                msgSpeakingId != '' &&
+                <View style={styles.convertingConatiner} >
+                    <Text style={styles.converting}>Đang chuyển đổi văn bản thành giọng nói</Text>
+                    <Spinner isVisible={true} type='Wave' size={20} color='#5f27cd' />
+
+                </View>
+            }
+
             <GiftedChat
                 text={msg}
                 onInputTextChanged={setMsg}
@@ -325,11 +335,10 @@ export default function ChatboxScreen({ navigation }) {
                 }}
                 renderSend={CustomButton}
                 // renderMessage={customMessage}
-                renderBubble={customBubble}
+                renderBubble={props => customBubble(props, msgSpeakingId, setMsgSpeakingId, textToSpeechAudio, setTextToSpeechAudio)}
                 isTyping={isTyping}
                 renderMessageText={renderMessageText}
                 placeholder={'Nhập tin nhắn'}
-            // isTyping={true}
             />
         </SafeAreaView>
     );
@@ -348,6 +357,15 @@ const styles = StyleSheet.create({
     noInternetContainer: {
         backgroundColor: '#b2bec3', width: '100%', justifyContent: 'center',
         flexDirection: 'row', padding: 6, alignItems: 'center'
+    },
+    convertingConatiner: {
+        backgroundColor: '#c8d6e5', width: '100%', justifyContent: 'center',
+        flexDirection: 'row', padding: 6, alignItems: 'center'
+    },
+    converting: {
+        fontSize: 14,
+        fontWeight: '600', color: '#5f27cd', textAlign: 'center',
+        marginEnd: 5
     }
 });
 

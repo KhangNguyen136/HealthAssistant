@@ -58,8 +58,9 @@ export default function ExpandTextView({ currentMessage, maxHeight = 300 }) {
         )
     }
 
-    const getContent = (data) => {
+    const getContent = (data, title) => {
         var result = []
+        result.push(getTitle(title));
         for (let i = 0; i < data.length; i++) {
             result.push(getComponent(data[i], i))
         }
@@ -78,16 +79,23 @@ export default function ExpandTextView({ currentMessage, maxHeight = 300 }) {
             case 'image':
                 return
             case 'single':
-                return (<Text style={{ fontSize: 14 }} key={id}>{item.content}</Text>)
+                return (<Text style={{ fontSize: 15 }} key={id}>{item.content}</Text>)
+            case 'h2':
+            case 'h3':
+                return getOtherHeader(item, id);
             default:
-                return getHeader(item, id)
-
+                return
         }
     }
 
-    const getHeader = (item, id) => {
+    const getOtherHeader = (item, id) => {
         return (
             <Text key={id} style={getTextStyles(item.type)} >{item.content}</Text>
+        )
+    }
+    const getTitle = (item) => {
+        return (
+            <Text key={-1} style={styles.title} >{item}</Text >
         )
     }
 
@@ -117,22 +125,20 @@ export default function ExpandTextView({ currentMessage, maxHeight = 300 }) {
     }
 
     const getParagraph = (item, id) => {
-
         return (
-            <Text key={id} style={{ lineHeight: 20, fontSize: 16, marginVertical: 4 }}  >
+            <Text key={id} style={{ lineHeight: 20, fontSize: 15, marginVertical: 4 }}  >
                 {"  " + item}
                 {/* {'\n'} */}
             </Text>
         )
     }
 
-
     return (
         <View style={{ paddingHorizontal: 8, paddingTop: 8 }} >
             {showText ?
                 <Text style={{ color: textColor, fontSize: 16 }} >{currentMessage.text}</Text> :
                 <View onLayout={onLayoutView} style={isLongData && isShowLess ? styles.containerShowLess : styles.containerShowFull}  >
-                    {getContent(currentMessage.data)}
+                    {getContent(currentMessage.data, currentMessage.text)}
                 </View>
             }
             {
@@ -144,17 +150,16 @@ export default function ExpandTextView({ currentMessage, maxHeight = 300 }) {
 
 }
 
-
 const getTextStyles = (type) => {
     switch (type) {
         case 'b':
             return styles.bold
         case 'i':
             return styles.italic
-        case 'header1':
-            return styles.header1
-        case 'header2':
-            return styles.header2
+        case 'h2':
+            return styles.title
+        case 'h3':
+            return styles.header3
         default:
             return styles.normal
     }
@@ -167,11 +172,11 @@ const styles = StyleSheet.create({
     italic: {
         fontStyle: 'italic'
     },
-    header1: {
-        fontSize: 17, fontWeight: '600', margin: 3
+    title: {
+        fontSize: 17, fontWeight: 'bold', marginBottom: 6
     },
-    header2: {
-        fontSize: 16, fontWeight: '500', margin: 3, marginVertical: 5
+    header3: {
+        fontSize: 16, fontWeight: 'bold', marginVertical: 1
     },
     normal: {
         fontSize: 15, margin: 5
