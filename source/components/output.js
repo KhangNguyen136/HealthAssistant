@@ -107,7 +107,7 @@ export default function ExpandTextView({ currentMessage, maxHeight = 300 }) {
                     lineHeight: 20,
                     marginLeft: 10, color: textColor,
                     // alignItems: 'center'
-                }}> <Text style={{ fontSize: 13, }} >{'\u2B25'}</Text> {item.substr(1, item.length - 2)}</Text>
+                }}> <Text style={{ fontSize: 13, }} >{'\u2B25'}</Text> {item}</Text>
         )
     }
 

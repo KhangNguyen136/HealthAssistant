@@ -8,7 +8,7 @@ import { GetIcon, IconButton } from '../../components/button';
 import Voice from '@react-native-voice/voice';
 import NetInfo from '@react-native-community/netinfo';
 import { renderMessageText, customMessage, customBubble } from '../../components/customChatbox';
-import Spinner from 'react-native-spinkit';
+import TextToSpeech from '../../bussiness/textToSpeech';
 const BOT = {
     _id: 2,
     name: 'Bot',
@@ -40,16 +40,16 @@ const requestRecordPermission = async () => {
 };
 
 export default function ChatboxScreen({ navigation }) {
-    var [isSetupDialogflow, setIsSetupDialogflow] = React.useState(false);
+    const [isSetupDialogflow, setIsSetupDialogflow] = React.useState(false);
     const [isLoading, setLoading] = React.useState(true)
-    const [msgSpeakingId, setMsgSpeakingId] = React.useState('');
     const [isOffline, setIsOffline] = React.useState(true);
     const [messages, setMessages] = React.useState([helloMsg]);
     const [isTyping, setIsTyping] = React.useState(false);
     const [isListening, setIsListening] = React.useState(false);
     const [msg, setMsg] = React.useState('');
 
-    const [textToSpeechAudio, setTextToSpeechAudio] = React.useState(undefined);
+    const [ttsContent, setTtsContent] = React.useState('');
+    const [ttsAudio, setTtsAudio] = React.useState(undefined);
     // const [pitch, setPitch] = React.useState('');
     //set up dialogflow server
     React.useEffect(() => {
@@ -134,7 +134,7 @@ export default function ChatboxScreen({ navigation }) {
         try {
             await Voice.start('vi-VN');
             setIsListening(true);
-            setPitch('');
+            // setPitch('');
             // setError('');
         } catch (e) {
             //eslint-disable-next-line
@@ -316,15 +316,7 @@ export default function ChatboxScreen({ navigation }) {
 
                 </View>
             }
-            {
-                msgSpeakingId != '' &&
-                <View style={styles.convertingConatiner} >
-                    <Text style={styles.converting}>Đang chuyển đổi văn bản thành giọng nói</Text>
-                    <Spinner isVisible={true} type='Wave' size={20} color='#5f27cd' />
-
-                </View>
-            }
-
+            <TextToSpeech content={ttsContent} setContent={setTtsContent} audio={ttsAudio} />
             <GiftedChat
                 text={msg}
                 onInputTextChanged={setMsg}
@@ -335,7 +327,7 @@ export default function ChatboxScreen({ navigation }) {
                 }}
                 renderSend={CustomButton}
                 // renderMessage={customMessage}
-                renderBubble={props => customBubble(props, msgSpeakingId, setMsgSpeakingId, textToSpeechAudio, setTextToSpeechAudio)}
+                renderBubble={props => customBubble(props, setTtsContent)}
                 isTyping={isTyping}
                 renderMessageText={renderMessageText}
                 placeholder={'Nhập tin nhắn'}
@@ -358,15 +350,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#b2bec3', width: '100%', justifyContent: 'center',
         flexDirection: 'row', padding: 6, alignItems: 'center'
     },
-    convertingConatiner: {
-        backgroundColor: '#c8d6e5', width: '100%', justifyContent: 'center',
-        flexDirection: 'row', padding: 6, alignItems: 'center'
-    },
-    converting: {
-        fontSize: 14,
-        fontWeight: '600', color: '#5f27cd', textAlign: 'center',
-        marginEnd: 5
-    }
+
 });
 
 const helloMsg = {
