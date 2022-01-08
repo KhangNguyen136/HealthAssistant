@@ -9,10 +9,9 @@ import ExpandTextView from './output';
 
 // import Spinner from 'react-native-spinkit';
 
-export const renderMessageText = (props) => {
-
+export const renderMessageText = (props, pressLink) => {
     return (
-        <ExpandTextView currentMessage={props.currentMessage} />
+        <ExpandTextView currentMessage={props.currentMessage} pressLink={pressLink} />
     )
 }
 
@@ -66,6 +65,9 @@ function getText(msg) {
     var result = msg.text + '. ';
     const content = msg.data
     for (let i = 0; i < content.length; i++) {
+        const type = content[i].type;
+        if (type == 'image' || type == 'link' || type == 'suggest')
+            continue
         result += content[i].content;
     }
     return result;

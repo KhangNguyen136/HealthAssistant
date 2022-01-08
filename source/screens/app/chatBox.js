@@ -257,6 +257,11 @@ export default function ChatboxScreen({ navigation }) {
         })
     }
 
+    const pressLink = (content) => {
+        setMsg(content)
+        // clickSend(content);
+    }
+
     const CustomButton = (props) => {
         if (isListening) {
             return (
@@ -329,7 +334,7 @@ export default function ChatboxScreen({ navigation }) {
                 // renderMessage={customMessage}
                 renderBubble={props => customBubble(props, setTtsContent)}
                 isTyping={isTyping}
-                renderMessageText={renderMessageText}
+                renderMessageText={props => renderMessageText(props, pressLink)}
                 placeholder={'Nhập tin nhắn'}
             />
         </SafeAreaView>
@@ -356,6 +361,39 @@ const styles = StyleSheet.create({
 const helloMsg = {
     _id: 0,
     text: 'Xin chào! Tôi có thể giúp gì được cho bạn?',
+    createdAt: new Date(),
+    user: BOT
+}
+
+const testMsg = {
+    _id: -1,
+    text: 'test msg',
+    data: [
+        {
+            type: 'h1',
+            content: 'Test header 1'
+        },
+        {
+            type: 'image',
+            content: 'https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2021/9/20/1-16321267506971751273406.jpg'
+        },
+        {
+            type: 'suggest',
+            content: 'ban co the bi nhung benh sau day:'
+        },
+        {
+            type: 'link',
+            content: 'viem dai trang'
+        },
+        {
+            type: 'link',
+            content: 'viem xoang'
+        },
+        {
+            type: 'link',
+            content: 'viem mui di ung'
+        },
+    ],
     createdAt: new Date(),
     user: BOT
 }

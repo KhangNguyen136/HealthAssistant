@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, FlatList, StyleSheet, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { GetIcon } from './button';
+const screenWidth = Dimensions.get('screen').width;
 // import { globalStyles } from '../../styles/globalStyles';
 
-export default function ExpandTextView({ currentMessage, maxHeight = 300 }) {
+export default function ExpandTextView({ currentMessage, maxHeight = 240, pressLink }) {
     const isUser = currentMessage.user._id == 1
     const textColor = isUser ? 'white' : 'black';
     const noData = currentMessage.data == undefined
@@ -30,13 +31,10 @@ export default function ExpandTextView({ currentMessage, maxHeight = 300 }) {
 
     const RenderViewMore = () => {
         return (
-            // <View style={{ flexDirection: 'row', marginHorizontal: 10 }}>
-            //     <Text style={{ flex: 1, textAlign: 'center' }}>.........</Text>
             <TouchableOpacity onPress={clickViewMore} style={{ flexDirection: 'row', alignSelf: 'flex-end', alignItems: 'flex-end' }} >
                 <Text style={{ color: textColor, fontWeight: '600' }} >Xem thêm</Text>
                 <GetIcon iconName={'down'} source={'AntDesign'} size={14} color={textColor} />
             </TouchableOpacity >
-            // </View>
         )
     }
     const RenderViewLess = () => {
@@ -77,7 +75,13 @@ export default function ExpandTextView({ currentMessage, maxHeight = 300 }) {
             case 'li1':
                 return getList1(item.content, id)
             case 'image':
-                return
+                return getImage(item.content, id);
+            case 'link':
+                return getLink(item.content, id);
+            case 'suggest':
+                return (
+                    <Text key={id} style={styles.header3} >{item.content}</Text>
+                )
             case 'single':
                 return (<Text style={{ fontSize: 15 }} key={id}>{item.content}</Text>)
             case 'h2':
@@ -88,6 +92,12 @@ export default function ExpandTextView({ currentMessage, maxHeight = 300 }) {
         }
     }
 
+    const getImage = (content, id) => {
+        console.log(content)
+        return (
+            <Image style={styles.img} source={{ uri: content }} key={id} />
+        )
+    }
     const getOtherHeader = (item, id) => {
         return (
             <Text key={id} style={getTextStyles(item.type)} >{item.content}</Text>
@@ -102,25 +112,14 @@ export default function ExpandTextView({ currentMessage, maxHeight = 300 }) {
     const getList = (item, id) => {
         return (
             <Text key={id}
-                style={{
-                    textAlignVertical: 'center', fontSize: 15,
-                    lineHeight: 20,
-                    marginLeft: 10, color: textColor,
-                    // alignItems: 'center'
-                }}> <Text style={{ fontSize: 13, }} >{'\u2B25'}</Text> {item}</Text>
+                style={styles.list}> <Text style={{ fontSize: 13, }} >{'\u2B25'}</Text> {item}</Text>
         )
     }
 
     const getList1 = (item, id) => {
         return (
-            // <View style={{ marginLeft: 10, marginTop: 5 }} >
-            <Text key={id}
-                style={{
-                    textAlignVertical: 'center', fontSize: 15,
-                    marginLeft: 16, lineHeight: 20
-
-                }}> <Text style={{ fontSize: 14 }} >{'\u2B26'}</Text> {item}</Text>
-            // </View>
+            <Text key={id} style={styles.list1}>
+                <Text style={{ fontSize: 14 }} >{'\u2B26'}</Text> {item}</Text>
         )
     }
 
@@ -128,8 +127,15 @@ export default function ExpandTextView({ currentMessage, maxHeight = 300 }) {
         return (
             <Text key={id} style={{ lineHeight: 20, fontSize: 15, marginVertical: 4 }}  >
                 {"  " + item}
-                {/* {'\n'} */}
             </Text>
+        )
+    }
+    const getLink = (item, id) => {
+        // const onPress = () => pressLink(item);
+        return (
+            <TouchableOpacity key={id} onPress={() => pressLink(item)} >
+                <Text style={styles.link}>{item}</Text>
+            </TouchableOpacity >
         )
     }
 
@@ -176,7 +182,7 @@ const styles = StyleSheet.create({
         fontSize: 17, fontWeight: 'bold', marginBottom: 6
     },
     header3: {
-        fontSize: 16, fontWeight: 'bold', marginVertical: 1
+        fontSize: 16, fontWeight: '600', marginVertical: 1
     },
     normal: {
         fontSize: 15, margin: 5
@@ -187,5 +193,24 @@ const styles = StyleSheet.create({
     containerShowLess: {
         maxHeight: 300, overflow: 'hidden',
         marginBottom: 8
+    },
+    link: {
+        color: '#0984e3', fontWeight: '500', fontSize: 15, margin: 4
+    },
+    list: {
+        textAlignVertical: 'center', fontSize: 15,
+        lineHeight: 20,
+        marginLeft: 10
+    },
+    list1: {
+        textAlignVertical: 'center', fontSize: 15,
+        marginLeft: 16, lineHeight: 20
+    },
+    img: {
+        // width: '100%',
+        // widt
+        resizeMode: 'cover',
+        width: screenWidth * 0.69,
+        height: 150
     }
 })
