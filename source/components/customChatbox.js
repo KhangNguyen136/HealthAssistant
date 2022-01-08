@@ -66,7 +66,7 @@ function getText(msg) {
     const content = msg.data
     for (let i = 0; i < content.length; i++) {
         const type = content[i].type;
-        if (type == 'image' || type == 'link' || type == 'suggest')
+        if (type == 'img' || type == 'link' || type == 'suggest')
             continue
         result += content[i].content;
     }

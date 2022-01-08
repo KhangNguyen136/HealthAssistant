@@ -74,7 +74,7 @@ export default function ExpandTextView({ currentMessage, maxHeight = 240, pressL
                 return getList(item.content, id)
             case 'li1':
                 return getList1(item.content, id)
-            case 'image':
+            case 'img':
                 return getImage(item.content, id);
             case 'link':
                 return getLink(item.content, id);
