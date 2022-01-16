@@ -93,7 +93,6 @@ export default function ExpandTextView({ currentMessage, maxHeight = 240, pressL
     }
 
     const getImage = (content, id) => {
-        console.log(content)
         return (
             <Image style={styles.img} source={{ uri: content }} key={id} />
         )
@@ -210,7 +209,9 @@ const styles = StyleSheet.create({
         // width: '100%',
         // widt
         resizeMode: 'cover',
-        width: screenWidth * 0.69,
-        height: 150
+        // width: screenWidth * 0.69,
+        width: '100%',
+        height: 150,
+        // alignSelf: 'center'
     }
 })

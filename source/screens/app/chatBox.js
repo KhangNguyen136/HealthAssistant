@@ -9,6 +9,7 @@ import Voice from '@react-native-voice/voice';
 import NetInfo from '@react-native-community/netinfo';
 import { renderMessageText, customMessage, customBubble } from '../../components/customChatbox';
 import TextToSpeech from '../../bussiness/textToSpeech';
+import LoadingIndicator from '../../components/loadingIndicator';
 const BOT = {
     _id: 2,
     name: 'Bot',
@@ -189,7 +190,7 @@ export default function ChatboxScreen({ navigation }) {
     }
 
     const onSend = React.useCallback(async (messages = []) => {
-        // console.log(messages);
+        console.log(messages);
         const msg = messages[0].text;
         setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
         setIsTyping(true);
@@ -336,6 +337,7 @@ export default function ChatboxScreen({ navigation }) {
                 isTyping={isTyping}
                 renderMessageText={props => renderMessageText(props, pressLink)}
                 placeholder={'Nhập tin nhắn'}
+                renderLoading={() => <LoadingIndicator />}
             />
         </SafeAreaView>
     );

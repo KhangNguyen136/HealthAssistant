@@ -4,11 +4,14 @@ import { textToSpeechAPIHeader, textToSpeechAPIUrl } from '../const';
 import axios from 'axios';
 import Spinner from 'react-native-spinkit';
 import { showMessage } from 'react-native-flash-message';
+import { GetIcon, IconButton } from '../components/button';
 var Sound = require('react-native-sound');
 
 
 export default function TextToSpeech({ content, setContent, audio }) {
     const [isPlaying, setIsPlaying] = React.useState(false);
+    const [isConverting, setIsConverting] = React.useState(false);
+    // const [isPause, setIsPause] =
     var audio = undefined;
     var timeOut = undefined;
     React.useEffect(() => {
@@ -22,18 +25,26 @@ export default function TextToSpeech({ content, setContent, audio }) {
         }
     }, [content])
 
-    const clear = useCallback(() => {
+    const clear = () => {
         if (audio != undefined && audio.isPlaying())
             audio.pause()
         audio = undefined;
         clearTimeout(timeOut);
+        // setIsConverting(false);
         // setIsPlaying(false);
-    })
+    }
 
     const done = () => {
+        if (isConverting)
+            setIsConverting(false);
         setIsPlaying(false);
         audio = undefined;
         setContent('');
+    }
+    const cancelSpeak = () => {
+        clear();
+        done();
+
     }
     const trySpeech = (count, link) => {
         // if (audio != undefined && audio.isPlaying()) {
@@ -56,6 +67,9 @@ export default function TextToSpeech({ content, setContent, audio }) {
                     }
                 }
                 else {
+                    console.log('Start speak');
+                    setIsConverting(false);
+                    setIsPlaying(true);
                     audio.play((success) => {
                         if (success) {
                             console.log('successfully finished playing');
@@ -63,6 +77,7 @@ export default function TextToSpeech({ content, setContent, audio }) {
                             console.log('playback failed due to audio decoding errors');
                             showMessage({ type: 'danger', message: 'Chuyển đổi văn bản thành giọng nói thất bại, xin vui lòng thử lại sau' });
                         }
+                        console.log('End speak');
                         done();
                     });
                 }
@@ -77,32 +92,53 @@ export default function TextToSpeech({ content, setContent, audio }) {
                 { headers: textToSpeechAPIHeader });
             console.log(res.data);
             timeOut = setTimeout(() => trySpeech(10, res.data.async), 2000)
-            setIsPlaying(true);
+            setIsConverting(true);
         } catch (error) {
             console.log(error.response.data);
             // errorHandle(error);
         }
     }
-    if (!isPlaying)
-        return (<View />)
-    return (
-        <View style={styles.convertingConatiner} >
-            <Text style={styles.converting}>Đang chuyển đổi văn bản thành giọng nói</Text>
-            <Spinner isVisible={true} type='Wave' size={20} color='#5f27cd' />
-        </View>
-    )
+    if (isConverting)
+        return (
+            <View style={styles.convertingConatiner} >
+                <View style={styles.row} >
+                    <Text style={styles.converting}>Đang chuyển đổi văn bản thành giọng nói</Text>
+                    <Spinner isVisible={true} type='Wave' size={20} color='#5f27cd' />
+                </View>
+
+                <IconButton iconName={'cancel-presentation'} source={'MaterialIcons'} color='red'
+                    onPress={cancelSpeak} />
+            </View>
+        )
+    if (isPlaying)
+        return (
+            <View style={styles.convertingConatiner} >
+                <View style={styles.row} >
+                    <Text style={styles.converting}>Đang nói</Text>
+                    <Spinner isVisible={true} type='Wave' size={20} color='#5f27cd' />
+                </View>
+
+                <IconButton iconName={'cancel-presentation'} source={'MaterialIcons'} color='red'
+                    onPress={cancelSpeak} />
+            </View>
+        )
+    return (<View />)
+
 }
 
 const styles = StyleSheet.create(
     {
         convertingConatiner: {
-            backgroundColor: '#c8d6e5', width: '100%', justifyContent: 'center',
+            backgroundColor: '#c8d6e5', width: '100%',
             flexDirection: 'row', padding: 6, alignItems: 'center'
         },
         converting: {
             fontSize: 14,
             fontWeight: '600', color: '#5f27cd', textAlign: 'center',
             marginEnd: 5
+        },
+        row: {
+            flexDirection: 'row', flex: 1, justifyContent: 'center'
         }
     }
 )
