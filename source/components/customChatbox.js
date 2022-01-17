@@ -3,11 +3,6 @@ import { View, ActivityIndicator } from 'react-native';
 import { IconButton } from './button';
 import { Bubble } from 'react-native-gifted-chat';
 import ExpandTextView from './output';
-// import axios from 'axios';
-// import { textToSpeechAPIHeader, textToSpeechAPIUrl } from '../const';
-// import { showMessage } from 'react-native-flash-message';
-
-// import Spinner from 'react-native-spinkit';
 
 export const renderMessageText = (props, pressLink) => {
     return (
