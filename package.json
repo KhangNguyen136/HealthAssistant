@@ -16,7 +16,7 @@
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.1.0",
     "@reduxjs/toolkit": "^1.6.1",
-    "axios": "^0.24.0",
+    "axios": "^0.25.0",
     "expo": "~42.0.1",
     "expo-splash-screen": "~0.11.2",
     "expo-status-bar": "~1.0.4",
@@ -39,6 +39,7 @@
     "react-native-spinkit": "^1.5.1",
     "react-native-toast-message": "^1.6.0",
     "react-native-unimodules": "0.14.10",
+    "react-native-uuid": "^2.0.1",
     "react-native-view-more-text": "^2.1.0",
     "react-native-web": "~0.13.12",
     "react-redux": "^7.2.5"

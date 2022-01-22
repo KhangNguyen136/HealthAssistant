@@ -12,7 +12,6 @@ export const renderMessageText = (props, pressLink) => {
 
 export const customBubble = (props, setSpeechText) => {
     const isUser = props.currentMessage.user._id == 1
-    // console.log({ isConverting, msgSpeakingID })
     const toSpeech = () => {
         setSpeechText(getText(props.currentMessage));
     }

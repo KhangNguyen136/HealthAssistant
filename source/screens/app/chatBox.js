@@ -10,6 +10,7 @@ import NetInfo from '@react-native-community/netinfo';
 import { renderMessageText, customMessage, customBubble } from '../../components/customChatbox';
 import TextToSpeech from '../../bussiness/textToSpeech';
 import LoadingIndicator from '../../components/loadingIndicator';
+import uuid from 'react-native-uuid'
 const BOT = {
     _id: 2,
     name: 'Bot',
@@ -90,7 +91,6 @@ export default function ChatboxScreen({ navigation }) {
         Voice.destroy = destroyRecognizer;
         // Voice.onSpeechPartialResults = onSpeechPartialResults;
         // Voice.onSpeechVolumeChanged = onSpeechVolumeChanged;
-
         return async () => {
             //destroy the process after switching the screen
             Voice.destroy().then(Voice.removeAllListeners);
@@ -232,8 +232,6 @@ export default function ChatboxScreen({ navigation }) {
             }
             botReply(msg);
         } catch (error) {
-            console.log(error);
-            console.log(messages[messages.length - 1]);
             let msg = {
                 _id: result.responseId,
                 text: 'Hệ thống đang gặp trục trặc, xin vui lòng thử lại sau!',
@@ -259,7 +257,15 @@ export default function ChatboxScreen({ navigation }) {
     }
 
     const pressLink = (content) => {
-        setMsg(content)
+        // setMsg(content)
+        const newMsg = {
+            _id: uuid.v4(),
+            createdAt: new Date(),
+            text: content,
+            user: { _id: 1 }
+        }
+        clickSend([newMsg]);
+        // const msg = [{}]
         // clickSend(content);
     }
 
@@ -363,39 +369,7 @@ const styles = StyleSheet.create({
 const helloMsg = {
     _id: 0,
     text: 'Xin chào! Tôi có thể giúp gì được cho bạn?',
-    createdAt: new Date(),
-    user: BOT
-}
-
-const testMsg = {
-    _id: -1,
-    text: 'test msg',
-    data: [
-        {
-            type: 'h1',
-            content: 'Test header 1'
-        },
-        {
-            type: 'image',
-            content: 'https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2021/9/20/1-16321267506971751273406.jpg'
-        },
-        {
-            type: 'suggest',
-            content: 'ban co the bi nhung benh sau day:'
-        },
-        {
-            type: 'link',
-            content: 'viem dai trang'
-        },
-        {
-            type: 'link',
-            content: 'viem xoang'
-        },
-        {
-            type: 'link',
-            content: 'viem mui di ung'
-        },
-    ],
+    content: undefined,
     createdAt: new Date(),
     user: BOT
 }

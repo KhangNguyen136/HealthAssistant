@@ -24,6 +24,7 @@ Dữ liệu của ứng dụng được chọn lọc từ những nguồn tin y 
 <p align="center"> 
 <img src="https://i.imgur.com/EWXI3eM.png" width="300" height="650">
 </p>
+
 - **Đọc văn bảng tiếng Việt**:
 <p align="center">
 <img src="https://i.imgur.com/3aH3LR3.png" width="300" height="650">

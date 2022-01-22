@@ -44,16 +44,18 @@ export default function TextToSpeech({ content, setContent, audio }) {
     const cancelSpeak = () => {
         clear();
         done();
-
     }
     const pauseSpeak = () => {
+        console.log(isPause)
         if (isPause) {
-            if (audio != undefined) {
-                audio.resume()
-            }
+            // if (audio != undefined) {
+            //     console.log('resume');
+            audio.resume()
+            // }
         }
         else {
             if (audio != undefined) {
+                console.log('pause');
                 audio.pause()
             }
         }
@@ -93,6 +95,7 @@ export default function TextToSpeech({ content, setContent, audio }) {
                     });
                 }
             })
+        // audio.release();
     }
     const toSpeech = async () => {
 
@@ -128,8 +131,8 @@ export default function TextToSpeech({ content, setContent, audio }) {
                     <Text style={styles.converting}>Đang đọc văn bản</Text>
                     <Spinner isVisible={true} type='Wave' size={20} color='#5f27cd' />
                 </View>
-                <IconButton iconName={isPause ? 'playcircleo' : 'pausecircleo'} source={'AntDesign'} color='#5f27cd'
-                    onPress={pauseSpeak} />
+                {/* <IconButton iconName={isPause ? 'playcircleo' : 'pausecircleo'} source={'AntDesign'} color='#5f27cd'
+                    onPress={pauseSpeak} /> */}
                 <IconButton iconName={'cancel'} source={'MaterialIcons'} color='red'
                     onPress={cancelSpeak} />
             </View>
