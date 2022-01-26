@@ -4,7 +4,7 @@ import { GetIcon } from './button';
 
 export default function LoginWithBtn({ type, onPress }) {
     var content = {
-        iconName: 'facebook', source: 'Entypo', title: 'Tài khoản facebook', backgroundColor: '#4267B2'
+        iconName: 'facebook', source: 'Entypo', title: 'Facebook', backgroundColor: '#4267B2'
     }
     switch (type) {
         case 'apple':
@@ -14,7 +14,7 @@ export default function LoginWithBtn({ type, onPress }) {
             break;
         case 'google':
             content = {
-                iconName: 'google', source: 'AntDesign', title: 'Tài khoản google', backgroundColor: '#e17055'
+                iconName: 'google', source: 'AntDesign', title: 'Google', backgroundColor: '#e17055'
             }
             break;
         case 'phone':

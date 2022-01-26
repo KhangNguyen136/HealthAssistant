@@ -1,12 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, Text, SafeAreaView, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, Image, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
-import { Formik } from 'formik';
 import firebaseApp from '../../firebaseConfig';
-// import { Success, CheckInputFailed } from '../../Components/AlertMsg/messageAlert';
-import TextInputCard from '../../components/TextInputCard'
 import PasswordTextInput from '../../components/passwordInput';
-import { AuthButton, GetIcon, MyButton } from '../../components/button';
+import { TextInput, Button } from 'react-native-paper';
+import { AuthButton } from '../../components/button';
 import LoadingIndicator from '../../components/loadingIndicator';
 import { FlexCard } from '../../components/card';
 import { showMessage } from 'react-native-flash-message';
@@ -16,18 +14,17 @@ export default function Login(props) {
     const [loading, setLoading] = React.useState(false)
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
-    const [usernameError, setUsernameError] = React.useState('')
-    const [passError, setPassError] = React.useState('')
-
+    const [usernameError, setUsernameError] = React.useState(false);
+    const [passError, setPassError] = React.useState(false);
     const { navigation } = props
 
 
-    const LoginAcc = (email, password, setAccount) => {
-        firebaseApp.auth().signInWithEmailAndPassword(email, password)
+    const LoginAcc = () => {
+        firebaseApp.auth().signInWithEmailAndPassword(username, password)
             .then((userCredential) => {
                 // Signed in
                 var user = userCredential.user;
-                setLoading(false)
+                // setLoading(false)
                 showMessage({
                     message: 'Đăng nhập thành công',
                     type: 'success'
@@ -45,12 +42,22 @@ export default function Login(props) {
             });
     }
 
-    CheckInput = (email, pass) => {
-        if (validateEmail(email) === false) {
-            setUsernameError('Email không hợp lệ')
+    CheckInput = () => {
+        if (usernameError != "" || passError != "")
+            return false
+        if (username == "") {
+            setUsernameError('Vui lòng nhập email');
             return false
         }
-        if (checkPassword(pass) === false) {
+        if (validateEmail(username) === false) {
+            setUsernameError('Email không hợp lệ');
+            return false
+        }
+        if (password == "") {
+            setPassError('Vui lòng nhập mật khẩu')
+            return false
+        }
+        if (checkPassword(password) === false) {
             setPassError('Mật khẩu không hợp lệ')
             return false
         }
@@ -58,39 +65,44 @@ export default function Login(props) {
     }
 
     PressLogin = () => {
-        console.log('log in with', { username, password })
-        if (CheckInput(username, password) === false) {
-            console.log('false')
+        if (CheckInput() === false) {
             return
         }
         setLoading(true)
-        LoginAcc(username, password)
+        LoginAcc()
     }
-
+    const getColor = (isError) => {
+        return isError ? "red" : "black";
+    }
     return (
-        <SafeAreaView style={{
-            ...globalStyles.container,
-            // backgroundColor: '#81ecec'
-        }}>
-
-            <ScrollView style={{ flex: 1 }} >
-                <FlexCard >
+        <ImageBackground source={require('../../../assets/background.png')} resizeMode='cover' style={globalStyles.imageBackground} >
+            <SafeAreaView style={{
+                ...globalStyles.container,
+                // backgroundColor: '#81ecec'
+            }}>
+                {/* <FlexCard > */}
+                <ScrollView style={{ flex: 1, height: '100%', padding: 10 }}   >
                     {/* // <View> */}
                     <View style={{ alignSelf: 'center' }} >
                         <Image source={require('../../../assets/logo.png')} style={{ width: 200, height: 200, borderRadius: 40 }} />
                     </View>
-                    <TextInputCard title={'Email'} placeholder={'Nhập email'} value={username}
-                        onChangeValue={(value) => {
-                            if (value == '') {
-                                setUsernameError('Vui lòng nhập email')
+
+                    <TextInput label={'Email'} placeholder='Nhập email'
+                        value={username} mode='outlined' onChangeText={(value) => {
+                            setUsername(value)
+                            if (value == "") {
+                                setUsernameError("Vui lòng nhập email");
                             }
                             else {
-                                setUsernameError('')
+                                setUsernameError("");
                             }
-                            setUsername(value)
-                        }} />
+                        }}
+                        style={{ color: getColor(usernameError != "") }}
+                        left={<TextInput.Icon name={'email'} />}
+                        error={usernameError}
+                    />
+                    <Text style={styles.errorMsg} >{usernameError}</Text>
 
-                    <Text style={styles.error} >{usernameError}</Text>
                     <PasswordTextInput title={'Mật khẩu'} placeholder={'Nhập mật khẩu'} value={password}
                         onChangeValue={(value) => {
                             if (value == '') {
@@ -100,39 +112,42 @@ export default function Login(props) {
                                 setPassError('')
                             }
                             setPassword(value)
-                        }} />
-                    <Text style={styles.error} >{passError}</Text>
+                        }} isError={passError != ""} />
+
+                    <Text style={styles.errorMsg} >{passError}</Text>
 
                     <AuthButton onPress={PressLogin} title={'Đăng nhập'} />
-                    <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                    }} >
-                        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')} >
-                            <Text style={{ fontSize: 14, fontWeight: '500', color: '#3399ff' }} >Quên mật khẩu</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.navigate('SignUp')} >
-                            <Text style={{ fontSize: 14, fontWeight: '500', color: '#3399ff' }}>Đăng ký</Text>
-                        </TouchableOpacity>
-
-                    </View>
+                    <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={() => navigation.navigate('ForgotPassword')} >
+                        <Text style={{ fontSize: 15, fontWeight: '500', color: '#3399ff', margin: 5 }} >Quên mật khẩu?</Text>
+                    </TouchableOpacity>
                     <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: '500' }} > Hoặc tiếp tục với </Text>
                     <LoginWithBtn type={'facebook'} />
                     <LoginWithBtn type={'google'} />
                     <LoginWithBtn type={'phone'} />
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        margin: 10
+                    }} >
+                        <Text style={{ fontSize: 16 }} >Chưa có tài khoản?</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('SignUp')} >
+                            <Text style={{ fontSize: 16, fontWeight: '500', color: '#3399ff' }}> Tạo tài khoản</Text>
+                        </TouchableOpacity>
+                    </View>
                     {loading &&
                         <LoadingIndicator />
                     }
                     {/* </View> */}
-                </FlexCard>
-            </ScrollView>
 
-        </SafeAreaView>)
+                </ScrollView>
+                {/* </FlexCard> */}
+            </SafeAreaView>
+        </ImageBackground>)
 }
 
 
-styles = StyleSheet.create({
-    error: { color: 'orange', marginLeft: 10, fontWeight: '500' },
+const styles = StyleSheet.create({
+    errorMsg: { color: 'red', marginTop: 5, marginBottom: 10, fontWeight: '500' },
 })
 
 

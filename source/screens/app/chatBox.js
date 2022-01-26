@@ -93,7 +93,7 @@ export default function ChatboxScreen({ navigation }) {
         // Voice.onSpeechVolumeChanged = onSpeechVolumeChanged;
         return async () => {
             //destroy the process after switching the screen
-            Voice.destroy().then(Voice.removeAllListeners);
+            // Voice.destroy().then(Voice.removeAllListeners);
             removeNetInfoSub();
         };
     }, [])

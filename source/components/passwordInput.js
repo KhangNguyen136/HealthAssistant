@@ -1,33 +1,25 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, Text } from 'react-native';
-import { GetIcon, IconButton } from './button';
+import { StyleSheet } from 'react-native';
+import { TextInput } from 'react-native-paper';
 
-export default function PasswordTextInput({ title, value, placeholder, onChangeValue, onBlur }) {
+export default function PasswordTextInput({ title, value, placeholder, onChangeValue, onBlur, isError }) {
     const [show, setShow] = React.useState(false)
-    var showIcon = show ? 'eye' : 'eye-with-line'
-    var source = 'MaterialIcons'
-    var iconName = 'confirmation-num'
-    if (title == 'Password' || title == 'New password') {
-        source = 'AntDesign'
-        iconName = 'key'
+    const clickEye = () => {
+        setShow(!show);
     }
     return (
-        <View style={styles.container} >
-            <View style={styles.titleContainer} >
-                <GetIcon iconName={iconName} size={20} source={source} />
-                <Text style={styles.title}>{title}</Text>
-            </View>
-            <View style={styles.contentContainer}>
-                <TextInput style={styles.content}
-                    value={value}
-                    onChangeText={onChangeValue}
-                    placeholder={placeholder}
-                    onBlur={onBlur}
-                    secureTextEntry={!show}
-                />
-                <IconButton iconName={showIcon} source={'Entypo'} onPress={() => setShow(!show)} size={16} />
-            </View>
-        </View>
+        <TextInput
+            label={title}
+            mode='outlined'
+            value={value}
+            onChangeText={onChangeValue}
+            placeholder={placeholder}
+            error={isError}
+            onBlur={onBlur}
+            secureTextEntry={!show}
+            right={<TextInput.Icon name={'eye'} onPress={clickEye} />}
+            left={<TextInput.Icon name={'lock'} />}
+        />
     )
 }
 

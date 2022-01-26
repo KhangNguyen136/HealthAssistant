@@ -56,6 +56,10 @@ export const globalStyles = StyleSheet.create(
         button: {
             padding: 4, margin: 3, borderColor: '#0984e3',
             color: 'white', borderWidth: 1, backgroundColor: '#81ecec', textAlign: 'center', alignSelf: 'center'
+        },
+        imageBackground: {
+            flex: 1,
+            justifyContent: 'center',
         }
     }
 );

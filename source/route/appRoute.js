@@ -19,11 +19,11 @@ export default function AppRoute() {
             else {
                 setLoginState(false)
             }
+            setIsLoading(false);
         })
     }, [])
     const setLoginState = (stt) => {
         setIsLoggedIn(stt)
-        setIsLoading(false)
     }
     // return (
     //     <SplashScreen />
