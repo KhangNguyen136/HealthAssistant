@@ -15,12 +15,10 @@ export default function SignUp() {
     const [loading, setLoading] = React.useState(false)
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
-    const [confirmPassword, setConfirmPassword] = React.useState('')
     const [displayName, setDisplayName] = React.useState('')
 
     const [usernameError, setUsernameError] = React.useState('')
     const [passError, setPassError] = React.useState('')
-    const [confirmPassError, setConfirmPassError] = React.useState('')
     const [displayNameError, setDisplayNameError] = React.useState('')
 
     const navigation = useNavigation()
@@ -28,8 +26,8 @@ export default function SignUp() {
         firebaseApp.auth().createUserWithEmailAndPassword(email, password)
             .then((userCredential) => {
                 // Signed in 
-                var user = userCredential.user;
-                setLoading(false);
+                // var user = userCredential.user;
+                // setLoading(false);
                 showMessage({
                     message: 'Đăng ký thành công',
                     description: 'Tự động đăng nhập sau khi đăng ký',
@@ -57,13 +55,13 @@ export default function SignUp() {
             });
     }
     pressSignUp = () => {
-        if (CheckInput(username, password, confirmPassword, displayName) === false) {
+        if (CheckInput(username, password, displayName) === false) {
             return
         }
         setLoading(true)
         SignUpAcc(username, password)
     }
-    function CheckInput(email, pass, pass2, name) {
+    function CheckInput(email, pass, name) {
         if (usernameError != "" || passError != "" || displayNameError != "")
             return false
         if (email == "") {
@@ -82,11 +80,6 @@ export default function SignUp() {
             setPassError('Mật khẩu phải chứa ít nhất 6 ký tự.')
             return false
         }
-        // if (pass !== pass2) {
-        //     setConfirmPassError('Xác nhận mật khẩu không trùng khớp')
-
-        //     return false
-        // }
         if (name === '') {
             setDisplayNameError('Vui lòng nhập tên hiển thị')
             return false
@@ -131,21 +124,6 @@ export default function SignUp() {
                         }} isError={passError != ""} />
 
                     <Text style={styles.errorMsg}>{passError}</Text>
-
-                    {/* <PasswordTextInput title={'Xác nhận mật khẩu'} placeholder={'Nhập lại mật khẩu'} value={confirmPassword}
-                        onChangeValue={(value) => {
-                            if (value == '') {
-                                setConfirmPassError('Xác nhận mật khẩu không trùng khớp')
-                            }
-                            else {
-                                setConfirmPassError('')
-                            }
-                            setConfirmPassword(value)
-                        }} />
-
-                    <Text style={styles.errorMsg}>{confirmPassError}</Text> */}
-
-
                     <TextInput label={'Tên hiển thị'} mode='outlined'
                         placeholder={'Nhập tên bạn muốn sử dụng'} value={displayName}
                         onChangeText={(value) => {

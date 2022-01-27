@@ -7,10 +7,12 @@ import { showMessage } from 'react-native-flash-message';
 import { GetIcon, IconButton } from '../../components/button';
 import Voice from '@react-native-voice/voice';
 import NetInfo from '@react-native-community/netinfo';
+import firebaseApp from '../../firebaseConfig';
 import { renderMessageText, customMessage, customBubble } from '../../components/customChatbox';
 import TextToSpeech from '../../bussiness/textToSpeech';
 import LoadingIndicator from '../../components/loadingIndicator';
 import uuid from 'react-native-uuid'
+import { searchOtherInfo } from '../../servies/msgServies';
 const BOT = {
     _id: 2,
     name: 'Bot',
@@ -49,7 +51,7 @@ export default function ChatboxScreen({ navigation }) {
     const [isTyping, setIsTyping] = React.useState(false);
     const [isListening, setIsListening] = React.useState(false);
     const [msg, setMsg] = React.useState('');
-
+    const [userInfo, setUserInfo] = React.useState(null);
     const [ttsContent, setTtsContent] = React.useState('');
     const [ttsAudio, setTtsAudio] = React.useState(undefined);
     // const [pitch, setPitch] = React.useState('');
@@ -91,6 +93,7 @@ export default function ChatboxScreen({ navigation }) {
         Voice.destroy = destroyRecognizer;
         // Voice.onSpeechPartialResults = onSpeechPartialResults;
         // Voice.onSpeechVolumeChanged = onSpeechVolumeChanged;
+        setUserInfo(firebaseApp.auth().currentUser);
         return async () => {
             //destroy the process after switching the screen
             // Voice.destroy().then(Voice.removeAllListeners);
@@ -212,7 +215,7 @@ export default function ChatboxScreen({ navigation }) {
     const clearMsg = () => {
         setMsg('');
     }
-    const handleResponse = (result) => {
+    const handleResponse = async (result) => {
         console.log('Response from dialogflow: ')
         console.log(result)
         // const msg = msgForm;
@@ -221,8 +224,20 @@ export default function ChatboxScreen({ navigation }) {
             if (webhoookStt?.code != undefined) {
                 throw new Error();
             }
-            let text = result.queryResult.fulfillmentMessages[0].text.text[0];
-            let data = result.queryResult.fulfillmentMessages[1]?.payload.content;
+            var text = "";
+            var data = undefined;
+            if (result.queryResult.intent.displayName == "tra_cuu") {
+                const searchRes = await searchOtherInfo(result.queryResult.queryText);
+                if (searchRes == null)
+                    throw new Error();
+                console.log(searchRes);
+                text = searchRes.text;
+                data = searchRes.data;
+            }
+            else {
+                text = result.queryResult.fulfillmentMessages[0].text.text[0];
+                data = result.queryResult.fulfillmentMessages[1]?.payload.content;
+            }
             let msg = {
                 _id: result.responseId,
                 data,

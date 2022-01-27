@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authStateReducer from "./redux/authStateSlice";
+import userInfoSlice from "./redux/userInfoSlice";
 export default configureStore({
     reducer: {
-        authState: authStateReducer,
+        userInfo: userInfoSlice,
     },
 })

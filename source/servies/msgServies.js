@@ -23,3 +23,12 @@ export async function getHistory(n, id) {
         console.log(error);
     }
 }
+
+export async function searchOtherInfo(text) {
+    try {
+        const res = await axios.post(serverUrl + 'api/searchOtherInfo', { text });
+        return res.data;
+    } catch (error) {
+        return null;
+    }
+}

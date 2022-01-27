@@ -5,15 +5,18 @@ import { NavigationContainer } from '@react-navigation/native';
 import firebaseApp from '../firebaseConfig';
 import FlashMessage from 'react-native-flash-message';
 import MainStack from './mainStack';
-import AppDrawer from './drawer';
-
+// import { useDispatch } from 'react-redux';
+// import { setUserInfo } from '../redux/userInfoSlice';
 export default function AppRoute() {
     const [isLoggedIn, setIsLoggedIn] = React.useState(false)
-    const [isLoading, setIsLoading] = React.useState(true)
+    const [isLoading, setIsLoading] = React.useState(true);
+    // const dispatch = useDispatch();
     React.useEffect(() => {
         const auth = firebaseApp.auth()
         auth.onAuthStateChanged((user) => {
             if (user != null) {
+                // console.log(user);
+                // dispatch(setUserInfo({ email: user.email, uid: user.uid }));
                 setLoginState(true)
             }
             else {

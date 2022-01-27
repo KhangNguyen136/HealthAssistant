@@ -24,7 +24,6 @@ export default function Login(props) {
             .then((userCredential) => {
                 // Signed in
                 var user = userCredential.user;
-                // setLoading(false)
                 showMessage({
                     message: 'Đăng nhập thành công',
                     type: 'success'
