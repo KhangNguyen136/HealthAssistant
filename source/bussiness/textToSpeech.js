@@ -8,7 +8,7 @@ import { GetIcon, IconButton } from '../components/button';
 var Sound = require('react-native-sound');
 
 
-export default function TextToSpeech({ content, setContent, audio }) {
+export default function TextToSpeech({ content, setContent }) {
     const [isPlaying, setIsPlaying] = React.useState(false);
     const [isConverting, setIsConverting] = React.useState(false);
     const [isPause, setIsPause] = React.useState(false);

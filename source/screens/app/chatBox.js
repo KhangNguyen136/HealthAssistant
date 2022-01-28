@@ -4,7 +4,7 @@ import { GiftedChat, Send } from 'react-native-gifted-chat'
 import { dialogflowConfig } from '../../../env';
 import { Dialogflow_V2 } from 'react-native-dialogflow';
 import { showMessage } from 'react-native-flash-message';
-import { GetIcon, IconButton } from '../../components/button';
+import { GetIcon, IconButton, LoadMoreButton, MyButton } from '../../components/button';
 import Voice from '@react-native-voice/voice';
 import NetInfo from '@react-native-community/netinfo';
 import firebaseApp from '../../firebaseConfig';
@@ -12,7 +12,7 @@ import { renderMessageText, customMessage, customBubble } from '../../components
 import TextToSpeech from '../../bussiness/textToSpeech';
 import LoadingIndicator from '../../components/loadingIndicator';
 import uuid from 'react-native-uuid'
-import { searchOtherInfo } from '../../servies/msgServies';
+import { loadMsg, saveMsg, searchOtherInfo } from '../../servies/msgServies';
 const BOT = {
     _id: 2,
     name: 'Bot',
@@ -51,9 +51,8 @@ export default function ChatboxScreen({ navigation }) {
     const [isTyping, setIsTyping] = React.useState(false);
     const [isListening, setIsListening] = React.useState(false);
     const [msg, setMsg] = React.useState('');
-    const [userInfo, setUserInfo] = React.useState(null);
+    const [userInfo] = React.useState(firebaseApp.auth().currentUser);
     const [ttsContent, setTtsContent] = React.useState('');
-    const [ttsAudio, setTtsAudio] = React.useState(undefined);
     // const [pitch, setPitch] = React.useState('');
     //set up dialogflow server
     React.useEffect(() => {
@@ -74,6 +73,8 @@ export default function ChatboxScreen({ navigation }) {
             // }];
             // Dialogflow_V2.setPermanentContexts(permanentContexts);
             setIsSetupDialogflow(true);
+            loadEarlier();
+            // saveMsg(userInfo.uid, helloMsg);
         }
     }, [isOffline])
 
@@ -93,7 +94,7 @@ export default function ChatboxScreen({ navigation }) {
         Voice.destroy = destroyRecognizer;
         // Voice.onSpeechPartialResults = onSpeechPartialResults;
         // Voice.onSpeechVolumeChanged = onSpeechVolumeChanged;
-        setUserInfo(firebaseApp.auth().currentUser);
+        // setUserInfo();
         return async () => {
             //destroy the process after switching the screen
             // Voice.destroy().then(Voice.removeAllListeners);
@@ -187,7 +188,6 @@ export default function ChatboxScreen({ navigation }) {
 
     const popLastMessages = () => {
         setMessages(previousMessages => {
-            console.log(previousMessages.slice(1, previousMessages.length));
             return previousMessages.slice(1, previousMessages.length);
         });
     }
@@ -210,6 +210,7 @@ export default function ChatboxScreen({ navigation }) {
                 popLastMessages();
             }
         )
+        saveMsg(userInfo.uid, messages[0]);
     }, [])
 
     const clearMsg = () => {
@@ -261,6 +262,7 @@ export default function ChatboxScreen({ navigation }) {
     const botReply = (msg) => {
         // console.log(msg)
         setMessages(previousMessages => GiftedChat.append(previousMessages, msg))
+        saveMsg(userInfo.uid, msg);
         setIsTyping(false);
     }
 
@@ -272,7 +274,6 @@ export default function ChatboxScreen({ navigation }) {
     }
 
     const pressLink = (content) => {
-        // setMsg(content)
         const newMsg = {
             _id: uuid.v4(),
             createdAt: new Date(),
@@ -280,8 +281,6 @@ export default function ChatboxScreen({ navigation }) {
             user: { _id: 1 }
         }
         clickSend([newMsg]);
-        // const msg = [{}]
-        // clickSend(content);
     }
 
     const CustomButton = (props) => {
@@ -333,6 +332,15 @@ export default function ChatboxScreen({ navigation }) {
         onSend(msg);
     }
 
+    const loadEarlier = async () => {
+        setLoading(true);
+        const res = await loadMsg(userInfo.uid, messages.length - 1);
+        if (res != null && res.length != 0) {
+            setMessages(current => GiftedChat.append(res, current));
+        }
+        setLoading(false);
+    }
+
     return (
         <SafeAreaView style={styles.container} >
             {
@@ -343,7 +351,7 @@ export default function ChatboxScreen({ navigation }) {
 
                 </View>
             }
-            <TextToSpeech content={ttsContent} setContent={setTtsContent} audio={ttsAudio} />
+            <TextToSpeech content={ttsContent} setContent={setTtsContent} />
             <GiftedChat
                 text={msg}
                 onInputTextChanged={setMsg}
@@ -358,8 +366,16 @@ export default function ChatboxScreen({ navigation }) {
                 isTyping={isTyping}
                 renderMessageText={props => renderMessageText(props, pressLink)}
                 placeholder={'Nhập tin nhắn'}
-                renderLoading={() => <LoadingIndicator />}
+                // renderLoading={() => <LoadingIndicator />}
+                onLoadEarlier={loadEarlier}
+                renderLoadEarlier={(props) => <LoadMoreButton title={'Tải thêm'} onPress={props.onLoadEarlier} />}
+                loadEarlier
+            // infiniteScroll
             />
+            {
+                isLoading &&
+                <LoadingIndicator />
+            }
         </SafeAreaView>
     );
 }

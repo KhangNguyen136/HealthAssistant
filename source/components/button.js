@@ -65,6 +65,17 @@ export function AuthButton({ onPress, title }) {
     )
 }
 
+export function LoadMoreButton({ onPress, title }) {
+    return (
+        <TouchableOpacity style={{
+            paddingHorizontal: 10, paddingVertical: 5, borderRadius: 5, backgroundColor: '#b2bec3',
+            alignSelf: 'center', margin: 6
+        }} onPress={onPress} >
+            <Text style={{ color: 'black' }}>{title}</Text>
+        </TouchableOpacity>
+    )
+}
+
 const styles = StyleSheet.create(
     {
         iconButton: {

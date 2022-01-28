@@ -1,10 +1,11 @@
 import { serverUrl } from "../const";
 import axios from "axios";
 
-export async function saveMsg(data) {
+export async function saveMsg(userId, msg) {
     try {
         //data is list obj with 2 elements
-        const res = await axios.post(serverUrl + 'msg/save', data);
+        console.log({ userId, msg });
+        const res = await axios.post(serverUrl + 'api/historyChat/saveMsg', { userId, msg });
         console.log(res.data);
     } catch (error) {
         console.log('Save error msg');
@@ -12,15 +13,21 @@ export async function saveMsg(data) {
     }
 }
 
-export async function getHistory(n, id) {
+export async function loadMsg(userId, currentN) {
     try {
-        const res = await axios.get(serverUrl + 'msg/history', {
-            params: { userID: id, n }
+        console.log({ userId, currentN });
+        const res = await axios.post(serverUrl + 'api/historyChat/loadHistory', {
+            userId, currentN
         })
-        return res.data;
+        console.log(res.data.data.length);
+        const data = [];
+        res.data.data.forEach(item =>
+            data.push(item.msg))
+        return data;
     } catch (error) {
         console.log('Get history fail');
         console.log(error);
+        return null;
     }
 }
 
