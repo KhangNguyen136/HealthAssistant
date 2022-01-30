@@ -370,6 +370,7 @@ export default function ChatboxScreen({ navigation }) {
                 onLoadEarlier={loadEarlier}
                 renderLoadEarlier={(props) => <LoadMoreButton title={'Tải thêm'} onPress={props.onLoadEarlier} />}
                 loadEarlier
+                infiniteScroll={false}
             // infiniteScroll
             />
             {

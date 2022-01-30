@@ -27,7 +27,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#97F1DA',
+
+  },
+  background: {
+    flex: 1, width: '100%', justifyContent: 'center', alignItems: 'center'
   },
   activityIndicator: {
     alignItems: 'center',

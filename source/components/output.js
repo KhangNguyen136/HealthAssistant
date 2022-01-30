@@ -8,9 +8,9 @@ export default function ExpandTextView({ currentMessage, maxHeight = 240, pressL
     const isUser = currentMessage.user._id == 1
     const textColor = isUser ? 'white' : 'black';
     const noData = currentMessage.data == undefined
-    const showText = isUser || noData
+    const showText = isUser || noData;
     // const textColor = 'black';
-    const [isLongData, setIsLongData] = React.useState(false);
+    const [isLongData, setIsLongData] = React.useState(!showText);
     const [isShowLess, setIsShowLess] = React.useState(true);
 
     const clickViewMore = () => {
@@ -24,8 +24,8 @@ export default function ExpandTextView({ currentMessage, maxHeight = 240, pressL
     const onLayoutView = (event) => {
         // console.log(event.nativeEvent.layout.height);
         const contentHeight = event.nativeEvent.layout.height;
-        if (contentHeight > maxHeight) {
-            setIsLongData(true)
+        if (contentHeight <= maxHeight) {
+            setIsLongData(false)
         }
     }
 
@@ -92,43 +92,6 @@ export default function ExpandTextView({ currentMessage, maxHeight = 240, pressL
         }
     }
 
-    const getImage = (content, id) => {
-        return (
-            <Image style={styles.img} source={{ uri: content }} key={id} />
-        )
-    }
-    const getOtherHeader = (item, id) => {
-        return (
-            <Text key={id} style={getTextStyles(item.type)} >{item.content}</Text>
-        )
-    }
-    const getTitle = (item) => {
-        return (
-            <Text key={-1} style={styles.title} >{item}</Text >
-        )
-    }
-
-    const getList = (item, id) => {
-        return (
-            <Text key={id}
-                style={styles.list}> <Text style={{ fontSize: 13, }} >{'\u2B25'}</Text> {item}</Text>
-        )
-    }
-
-    const getList1 = (item, id) => {
-        return (
-            <Text key={id} style={styles.list1}>
-                <Text style={{ fontSize: 14 }} >{'\u2B26'}</Text> {item}</Text>
-        )
-    }
-
-    const getParagraph = (item, id) => {
-        return (
-            <Text key={id} style={{ lineHeight: 20, fontSize: 15, marginVertical: 4 }}  >
-                {"  " + item}
-            </Text>
-        )
-    }
     const getLink = (item, id) => {
         // const onPress = () => pressLink(item);
         return (
@@ -137,11 +100,11 @@ export default function ExpandTextView({ currentMessage, maxHeight = 240, pressL
             </TouchableOpacity >
         )
     }
-
     return (
         <View style={{ paddingHorizontal: 8, paddingTop: 8 }} >
             {showText ?
-                <Text style={{ color: textColor, fontSize: 16 }} >{currentMessage.text}</Text> :
+                <Text style={{ color: textColor, fontSize: 16 }} >{currentMessage.text}</Text>
+                :
                 <View onLayout={onLayoutView} style={isLongData && isShowLess ? styles.containerShowLess : styles.containerShowFull}  >
                     {getContent(currentMessage.data, currentMessage.text)}
                 </View>
@@ -154,6 +117,47 @@ export default function ExpandTextView({ currentMessage, maxHeight = 240, pressL
     )
 
 }
+
+
+
+const getImage = (content, id) => {
+    return (
+        <Image style={styles.img} source={{ uri: content }} key={id} />
+    )
+}
+const getOtherHeader = (item, id) => {
+    return (
+        <Text key={id} style={getTextStyles(item.type)} >{item.content}</Text>
+    )
+}
+const getTitle = (item) => {
+    return (
+        <Text key={-1} style={styles.title} >{item}</Text >
+    )
+}
+
+const getList = (item, id) => {
+    return (
+        <Text key={id}
+            style={styles.list}> <Text style={{ fontSize: 13, }} >{'\u2B25'}</Text> {item}</Text>
+    )
+}
+
+const getList1 = (item, id) => {
+    return (
+        <Text key={id} style={styles.list1}>
+            <Text style={{ fontSize: 14 }} >{'\u2B26'}</Text> {item}</Text>
+    )
+}
+
+const getParagraph = (item, id) => {
+    return (
+        <Text key={id} style={{ lineHeight: 20, fontSize: 15, marginVertical: 4 }}  >
+            {"  " + item}
+        </Text>
+    )
+}
+
 
 const getTextStyles = (type) => {
     switch (type) {

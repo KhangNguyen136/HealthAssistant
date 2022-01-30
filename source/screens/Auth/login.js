@@ -80,7 +80,7 @@ export default function Login(props) {
                 // backgroundColor: '#81ecec'
             }}>
                 {/* <FlexCard > */}
-                <ScrollView style={{ flex: 1, height: '100%', padding: 10 }}   >
+                <ScrollView style={{ flex: 1, height: '100%' }}   >
                     {/* // <View> */}
                     <View style={{ alignSelf: 'center' }} >
                         <Image source={require('../../../assets/logo.png')} style={{ width: 200, height: 200, borderRadius: 40 }} />
@@ -120,9 +120,9 @@ export default function Login(props) {
                         <Text style={{ fontSize: 15, fontWeight: '500', color: '#3399ff', margin: 5 }} >Quên mật khẩu?</Text>
                     </TouchableOpacity>
                     <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: '500' }} > Hoặc tiếp tục với </Text>
-                    <LoginWithBtn type={'facebook'} />
+                    {/* <LoginWithBtn type={'facebook'} /> */}
                     <LoginWithBtn type={'google'} />
-                    <LoginWithBtn type={'phone'} />
+                    {/* <LoginWithBtn type={'phone'} /> */}
                     <View style={{
                         flexDirection: 'row',
                         justifyContent: 'center',

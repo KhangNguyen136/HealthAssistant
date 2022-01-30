@@ -60,6 +60,7 @@ export const globalStyles = StyleSheet.create(
         imageBackground: {
             flex: 1,
             justifyContent: 'center',
+            padding: 10,
         }
     }
 );

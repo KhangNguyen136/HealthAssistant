@@ -4,7 +4,6 @@ import axios from "axios";
 export async function saveMsg(userId, msg) {
     try {
         //data is list obj with 2 elements
-        console.log({ userId, msg });
         const res = await axios.post(serverUrl + 'api/historyChat/saveMsg', { userId, msg });
         console.log(res.data);
     } catch (error) {
