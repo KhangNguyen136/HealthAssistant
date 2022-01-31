@@ -47,7 +47,7 @@ export default function ChatboxScreen({ navigation }) {
     const [isSetupDialogflow, setIsSetupDialogflow] = React.useState(false);
     const [isLoading, setLoading] = React.useState(true)
     const [isOffline, setIsOffline] = React.useState(true);
-    const [messages, setMessages] = React.useState([helloMsg]);
+    const [messages, setMessages] = React.useState([]);
     const [isTyping, setIsTyping] = React.useState(false);
     const [isListening, setIsListening] = React.useState(false);
     const [msg, setMsg] = React.useState('');
@@ -73,17 +73,23 @@ export default function ChatboxScreen({ navigation }) {
             // }];
             // Dialogflow_V2.setPermanentContexts(permanentContexts);
             setIsSetupDialogflow(true);
-            loadEarlier();
+            // loadEarlier();
+            getInitData()
             // saveMsg(userInfo.uid, helloMsg);
         }
     }, [isOffline])
 
+    const getInitData = async () => {
+        const res = await loadMsg(userInfo.uid, 0);
+        // if(res.length != 0 )
+        setMessages(GiftedChat.append(res, helloMsg))
+        setLoading(false);
+    }
     //set up network info and voice services
     React.useEffect(() => {
         const removeNetInfoSub = NetInfo.addEventListener((state) => {
             const offline = !(state.isConnected && state.isInternetReachable);
             setIsOffline(offline);
-            setLoading(false);
         });
         requestRecordPermission()
         Voice.onSpeechStart = onSpeechStart;
@@ -334,7 +340,7 @@ export default function ChatboxScreen({ navigation }) {
 
     const loadEarlier = async () => {
         setLoading(true);
-        const res = await loadMsg(userInfo.uid, messages.length - 1);
+        const res = await loadMsg(userInfo.uid, messages.length);
         if (res != null && res.length != 0) {
             setMessages(current => GiftedChat.append(res, current));
         }

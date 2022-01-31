@@ -26,7 +26,7 @@ export async function loadMsg(userId, currentN) {
     } catch (error) {
         console.log('Get history fail');
         console.log(error);
-        return null;
+        return [];
     }
 }
 
