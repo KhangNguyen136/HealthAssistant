@@ -340,7 +340,7 @@ export default function ChatboxScreen({ navigation }) {
 
     const loadEarlier = async () => {
         setLoading(true);
-        const res = await loadMsg(userInfo.uid, messages.length);
+        const res = await loadMsg(userInfo.uid, messages.length - 1);
         if (res != null && res.length != 0) {
             setMessages(current => GiftedChat.append(res, current));
         }
