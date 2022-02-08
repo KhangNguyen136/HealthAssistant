@@ -5,6 +5,10 @@ export const userInfoSlice = createSlice({
   initialState: {
     email: "",
     userId: "",
+    displayName: "",
+    fullName: "",
+    birthday: null,
+
   },
   reducers: {
     setUserInfo: (state, action) => {

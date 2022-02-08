@@ -38,6 +38,7 @@
     "react-native-screens": "~3.4.0",
     "react-native-sound": "^0.11.1",
     "react-native-spinkit": "^1.5.1",
+    "react-native-star-rating": "^1.1.0",
     "react-native-toast-message": "^1.6.0",
     "react-native-unimodules": "0.14.10",
     "react-native-uuid": "^2.0.1",

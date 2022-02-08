@@ -47,7 +47,7 @@ export default function ChatboxScreen({ navigation }) {
     const [isSetupDialogflow, setIsSetupDialogflow] = React.useState(false);
     const [isLoading, setLoading] = React.useState(true)
     const [isOffline, setIsOffline] = React.useState(true);
-    const [messages, setMessages] = React.useState([]);
+    const [messages, setMessages] = React.useState([helloMsg]);
     const [isTyping, setIsTyping] = React.useState(false);
     const [isListening, setIsListening] = React.useState(false);
     const [msg, setMsg] = React.useState('');
@@ -80,9 +80,8 @@ export default function ChatboxScreen({ navigation }) {
     }, [isOffline])
 
     const getInitData = async () => {
-        const res = await loadMsg(userInfo.uid, 0);
         // if(res.length != 0 )
-        setMessages(GiftedChat.append(res, helloMsg))
+        // setMessages(GiftedChat.append(res, helloMsg))
         setLoading(false);
     }
     //set up network info and voice services
@@ -255,7 +254,7 @@ export default function ChatboxScreen({ navigation }) {
             botReply(msg);
         } catch (error) {
             let msg = {
-                _id: result.responseId,
+                _id: uuid.v4(),
                 text: 'Hệ thống đang gặp trục trặc, xin vui lòng thử lại sau!',
                 createdAt: new Date(),
                 user: BOT

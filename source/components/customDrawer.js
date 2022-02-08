@@ -51,7 +51,7 @@ const CustomSidebarMenu = (props) => {
                 {/* <OtherButton title={'History'} /> */}
                 <DrawerItem
                     label="Về chúng tôi"
-                // onPress={() => Linking.openURL('https://aboutreact.com/')}
+                    onPress={() => Linking.openURL('https://trolysuckhoe.herokuapp.com/')}
                 />
                 <TouchableOpacity style={styles.customItem}>
                     <Text style={{ marginRight: 3 }}>

@@ -3,6 +3,7 @@
 -   **Mô tả**: một ứng dụng tra cứu dưới dạng chatbot giúp người dùng tìm hiểu về thông tin của những căn bệnh, chẩn đoán căn bệnh tiềm tàng với những triệu chứng lâm sàng và tra cứu về những thông tin y tế khác. 
 Ứng dụng còn hỗ trợ nhập tin nhắn bằng giọng nói và đọc văn bản tiếng Việt để hỗ trọ những người có thị lực yếu, khả năng nhập liệu không tốt (đặc biệt là người già) giúp tiếp cận được nhiều người dùng hơn.
 Dữ liệu của ứng dụng được chọn lọc từ những nguồn tin y tế đáng tin cậy như: youmed (có chứng chỉ quốc tế về thông tin y tế) và vinmec (trang thông tin y tế của hệ thống bệnh viện đa khoa quốc tế Vinmec, một công ty con của tập đoàn VinGroup)
+-   **Về chúng tôi**: https://trolysuckhoe.herokuapp.com/
 -   **Xây dựng với**: React native (Javascript), dialogflow (hệ thống xử lý ngôn ngữ tự nhiên), google speech to text service, FPT text to speech API, express nodeJS, mongoDB ....
 -   **Hỗ trợ hệ điều hành**: android, ios.
 -   **Dev**: Nguyen Tan Khang.
