@@ -9,6 +9,12 @@ Dữ liệu của ứng dụng được chọn lọc từ những nguồn tin y 
 -   **Dev**: Nguyen Tan Khang.
 
 ## Những chức năng chính:
+
+-   **Đăng nhập, đăng ký, quên mật khẩu, đổi mật khẩu**: 
+<p align="center"> 
+<img src="https://i.imgur.com/EXImaLZ.png" width="300" height="650">
+</p>
+
 -   **Tra cứu thông tin về những căn bệnh**: thông tin được trả về dưới dạng tin nhắn và có hình ảnh minh họa nếu có, sẽ có gợi ý những thông tin liên quan đến căn bệnh đó. Tin nhắn sẽ được quy định ở độ dài nhất định, người dùng có thể chọn xem thêm để xem toàn bộ tin nhắn, điều này giúp tránh trãi nghiệp xấu khi câu trả lời không chính xác.
 <p align="center"> 
 <img src="https://i.imgur.com/IV7KiUs.png" width="300" height="650"><img src="https://i.imgur.com/UuTEJhW.png" width="300" height="650">
@@ -31,3 +37,17 @@ Dữ liệu của ứng dụng được chọn lọc từ những nguồn tin y 
 <img src="https://i.imgur.com/3aH3LR3.png" width="300" height="650">
 </p>
 
+-   **Nhận phản hồi từ người dùng**: 
+<p align="center"> 
+<img src="https://i.imgur.com/HpgT2Uz.png" width="300" height="650">
+</p>
+
+-   **Thông tin tài khoản**: 
+<p align="center"> 
+<img src="https://i.imgur.com/ZEVeTZb.png" width="300" height="650">
+</p>
+
+-   **Về chúng tôi**: 
+<p align="center"> 
+<img src="https://i.imgur.com/rtsjeJo.png" width="300" height="650">
+</p>

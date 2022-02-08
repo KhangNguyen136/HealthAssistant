@@ -7,9 +7,9 @@ import AppRoute from './route/appRoute';
 export default function App() {
     return (
         <Provider store={store}>
-            <PaperProvider>
-                <AppRoute />
-            </PaperProvider>
+            {/* <PaperProvider> */}
+            <AppRoute />
+            {/* </PaperProvider> */}
         </Provider>
     )
 }
