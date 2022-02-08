@@ -1,24 +1,27 @@
 import { createSlice } from '@reduxjs/toolkit'
-
+const initValue = {
+  email: "",
+  userId: "",
+  displayName: "",
+  fullName: "",
+  phoneNumber: "",
+  birthday: null,
+}
 export const userInfoSlice = createSlice({
   name: 'userInfoState',
-  initialState: {
-    email: "",
-    userId: "",
-    displayName: "",
-    fullName: "",
-    birthday: null,
-
-  },
+  initialState: initValue,
   reducers: {
     setUserInfo: (state, action) => {
       const data = action.payload;
       state.email = data.email;
       state.userId = data.userId;
+      state.displayName = data.displayName;
+      state.fullName = data.fullName;
+      state.phoneNumber = data.phoneNumber;
+      state.birthday = data.birthday;
     },
     resetUserInfo: (state) => {
-      state.email = "";
-      state.uid = "";
+      state = initValue
     },
   },
 })

@@ -2,8 +2,7 @@ import React from 'react';
 import { Text, SafeAreaView } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import LoadingIndicator from '../../components/loadingIndicator';
-import axios from 'axios';
-
+import WebView from 'react-native-webview';
 export default function GuideScreen() {
     React.useEffect(() => {
 

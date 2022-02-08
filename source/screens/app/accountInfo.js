@@ -1,89 +1,82 @@
 import React from 'react';
-import { SafeAreaView, Image, View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { GetIcon, MyButton } from '../../components/button';
-import Card, { FlexCard } from '../../components/card';
+import { SafeAreaView, View, Text, StyleSheet, ScrollView } from 'react-native';
+import { AuthButton, GetIcon, MyButton } from '../../components/button';
+import { FlexCard } from '../../components/card';
 // import CountryPicker from '../../components/countryPicker';
 import MyDatePicker from '../../components/datePicker';
-import TextInputCard from '../../components/TextInputCard';
+import { TextInput } from 'react-native-paper';
 import { globalStyles } from '../../styles/globalStyles';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { showMessage } from 'react-native-flash-message';
 import LoadingIndicator from '../../components/loadingIndicator';
-
-var options = {
-    title: 'Select Image',
-    customButtons: [
-        {
-            name: 'customOptionKey',
-            title: 'Choose Photo from Custom Option'
-        },
-    ],
-    storageOptions: {
-        skipBackup: true,
-        path: 'images',
-    },
-    // mediaType: 'photo'
-};
-
+import { updateInfo } from '../../servies/userInfoServices';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUserInfo } from '../../redux/userInfoSlice'
+import { sub } from 'react-native-reanimated';
 export default function UserInfo({ navigation }) {
-    // const [country, setCountry] = React.useState('Vietnam')
-    const [img, setImg] = React.useState(require('../../../assets/botAvt.jpg'))
+    const dispatch = useDispatch();
+    const userInfo = useSelector(state => state.userInfo);
+    console.log(userInfo);
+    const [loading, setLoading] = React.useState(false);
+    const [displayName, setDisplayName] = React.useState(userInfo.displayName);
+    const [fullName, setFullName] = React.useState(userInfo.fullName);
+    const [phoneNumber, setPhoneNumber] = React.useState(userInfo.phoneNumber);
+    const [birthday, setBirthday] = React.useState(new Date(userInfo.birthday))
     React.useEffect(() => {
-        console.log(img)
     }, [])
-    const editAvt = () => {
-        launchImageLibrary(options, Response => {
-            if (Response.didCancel) {
-                return
-            }
-            else if (Response.errorCode) {
-                showMessage({
-                    message: 'Action failed', description: Response.errorMessage, type: 'danger'
-                })
-            }
-            else {
-                console.log(Response.assets)
-                setImg({ uri: Response.assets[0].uri })
-            }
-
-        })
+    const submit = async () => {
+        if (displayName == "") {
+            showMessage({
+                type: 'warning', message: 'Vui lòng nhập tên hiển thị'
+            })
+            return
+        }
+        setLoading(true);
+        const res = await updateInfo(userInfo.userId, displayName, fullName, birthday.valueOf(), phoneNumber);
+        console.log(res);
+        if (res == null)
+            showMessage({ type: 'danger', message: 'Có sự cố đã xảy ra', description: 'Vui lòng kiểm tra kết nối mạng và thử lại' })
+        else {
+            showMessage({ type: 'success', message: 'Cập nhật thông tin thành công' })
+            dispatch(setUserInfo(res));
+        }
+        setLoading(false);
     }
+
     return (
         <SafeAreaView style={globalStyles.container} >
-            {/* <ScrollView>
-                <Card>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }} >
-                        <TouchableOpacity style={{ alignItems: 'center', marginHorizontal: 10, marginVertical: 2 }} onPress={editAvt} >
-                            <Image style={globalStyles.avt} source={img} />
-                            <View style={{ flexDirection: 'row', marginTop: 4 }} >
-                                <Text style={{ fontWeight: '500', color: '#3399ff' }} >Edit</Text>
-                                <GetIcon iconName={'edit'} source={'AntDesign'} size={16} color={'#3399ff'} />
+            <FlexCard>
+                <ScrollView style={{ flex: 1 }}>
+                    <TextInput label={'Tên hiển thị'} mode={'outlined'} style={styles.input}
+                        value={displayName} onChangeText={setDisplayName}
+                        left={<TextInput.Icon name={'account'} />} />
+                    <TextInput label={'Tên đầy đủ'} mode={'outlined'} style={styles.input}
+                        value={fullName} onChangeText={setFullName}
+                        left={<TextInput.Icon name={'account-details'} />} />
 
-                            </View>
-                        </TouchableOpacity>
-                        <View style={{ flex: 1 }} >
-                            <Text style={globalStyles.titleName} >Khang Nguyen</Text>
-                            <Text>Account id: asdd123dsd3434</Text>
-                            <Text>Account type: student</Text>
+                    <TextInput label={'Email'} mode={'outlined'} style={styles.input}
+                        value={userInfo.email} disabled
+                        left={<TextInput.Icon name={'email'} />} />
 
+                    <TextInput label={'Số điện thoại'} mode={'outlined'} style={styles.input}
+                        value={phoneNumber} onChangeText={setPhoneNumber}
+                        keyboardType={'phone-pad'}
+                        left={<TextInput.Icon name={'cellphone'} />} />
+                    <MyDatePicker title={'Ngày sinh'} date={birthday} setDate={setBirthday} />
 
-                        </View>
-                    </View>
-                </Card>
-                <Card>
-                    <TextInputCard title={'Name'} placeholder={'Enter your name'} />
-                    
-                    <TextInputCard title={'Phone number'} keyboardType={'phone-pad'} placeholder={'Enter your phone number'} />
-                    
-                    <TextInputCard title={'Email'} placeholder={'Enter your email'} />
-                </Card>
-                
-                <Card>
-                    <MyDatePicker title={'Birthday'} />
-                </Card>
-                <MyButton moreStyle={{ ...globalStyles.authBtnContainer, width: '69%' }} title={'Save'} moreTitleStyle={{ color: 'white' }} />
-            </ScrollView> */}
-            <LoadingIndicator text='Comming soon' />
+                    <AuthButton title={'Cập nhật'} onPress={submit} />
+
+                </ScrollView>
+            </FlexCard>
+
+            {loading &&
+                <LoadingIndicator />
+            }
         </SafeAreaView>
     )
 }
+
+const styles = StyleSheet.create({
+    input: {
+        margin: 5
+    }
+})

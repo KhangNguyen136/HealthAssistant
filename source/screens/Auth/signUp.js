@@ -9,6 +9,7 @@ import PasswordTextInput from '../../components/passwordInput';
 import { AuthButton } from '../../components/button';
 import { FlexCard } from '../../components/card';
 import { showMessage } from 'react-native-flash-message';
+import { resgister } from '../../servies/userInfoServices';
 // import InputForm from '../../Components/InputForm/signUpForm'
 
 export default function SignUp() {
@@ -22,37 +23,75 @@ export default function SignUp() {
     const [displayNameError, setDisplayNameError] = React.useState('')
 
     const navigation = useNavigation()
-    const SignUpAcc = (email, password) => {
-        firebaseApp.auth().createUserWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                // Signed in 
-                // var user = userCredential.user;
-                // setLoading(false);
+    const SignUpAcc = async (email, password) => {
+        try {
+            const userCredential = await firebaseApp.auth().createUserWithEmailAndPassword(email, password)
+            const user = userCredential.user
+            if (user == null)
+                throw new Error();
+            const res = await resgister(user.uid, email, displayName);
+            if (res)
                 showMessage({
                     message: 'Đăng ký thành công',
                     description: 'Tự động đăng nhập sau khi đăng ký',
                     type: 'success'
                 });
-                // firebaseApp.auth().signOut().then(() => {
-                //     // Sign-out successful.
-                //     console.log('Logged out after sign up successfully!')
-                // }).catch((error) => {
-                //     // An error happened.
-                //     console.log('Logged out after sign up failed!')
-                // });
-                // ...
+            else
+                throw new Error()
+            setLoading(false);
+        } catch (error) {
+            const errorCode = error.code;
+            console.log(errorCode);
+            var des = "Có sự cố xảy ra trong quá trình đăng nhập, vui lòng kiểm tra và thử lại.";
+            switch (errorCode) {
+                case 'auth/email-already-in-use':
+                    des = "Email đã sử dụng"
+                    break;
+                case "auth/network-request-failed":
+                    des = "Vui lòng kiểm tra kết nối mạng và thử lại";
+                    break;
+            }
+            setLoading(false);
+            showMessage({
+                message: 'Đăng ký thất bại',
+                description: des,
+                type: 'danger'
             })
-            .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                setLoading(false);
-                showMessage({
-                    message: 'Đăng ký thất bại',
-                    description: error.message,
-                    type: 'danger'
-                })
-                // ..
-            });
+        }
+        // .then(async (userCredential) => {
+        //     // Signed in 
+        //     var user = userCredential.user;
+        //     const res = await resgister(user.uid, email, displayName)
+        //     if (res)
+        //         showMessage({
+        //             message: 'Đăng ký thành công',
+        //             description: 'Tự động đăng nhập sau khi đăng ký',
+        //             type: 'success'
+        //         });
+        //     else
+        //         throw new Error()
+        //     setLoading(false);
+        // })
+        // .catch((error) => {
+        //     const errorCode = error.code;
+        //     console.log(errorCode);
+        //     var des = "Có sự cố xảy ra trong quá trình đăng nhập, vui lòng kiểm tra và thử lại.";
+        //     switch (errorCode) {
+        //         case 'auth/email-already-in-use':
+        //             des = "Email đã sử dụng"
+        //             break;
+        //         case "auth/network-request-failed":
+        //             des = "Vui lòng kiểm tra kết nối mạng và thử lại";
+        //             break;
+        //     }
+        //     setLoading(false);
+        //     showMessage({
+        //         message: 'Đăng ký thất bại',
+        //         description: des,
+        //         type: 'danger'
+        //     })
+        //     // ..
+        // });
     }
     pressSignUp = () => {
         if (CheckInput(username, password, displayName) === false) {

@@ -1,10 +1,9 @@
 import React from 'react';
-import { Text, View, Button, Platform } from 'react-native';
+import { Text, View, Button, Platform, StyleSheet } from 'react-native';
 import { GetIcon } from './button';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-export default function MyDateTimePicker({ title, mode }) {
-    const [date, setDate] = React.useState(new Date())
+export default function MyDateTimePicker({ title, date, setDate }) {
     const isIOS = Platform.OS === 'ios';
 
     const AndroidDateTimePicker = () => {
@@ -21,7 +20,7 @@ export default function MyDateTimePicker({ title, mode }) {
                     <DateTimePicker
                         testID="dateTimePickerAndroid"
                         value={date}
-                        mode={mode}
+                        mode={'date'}
                         is24Hour={true}
                         display="default"
                         onChange={onChangeAndroid}
@@ -37,10 +36,10 @@ export default function MyDateTimePicker({ title, mode }) {
 
 
     return (
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', margin: 5 }} >
+        <View style={styles.container} >
             <View style={{ flexDirection: 'row', alignItems: 'center' }} >
                 <GetIcon iconName={'birthday-cake'} source={'FontAwesome'} />
-                <Text style={{ marginLeft: 10, fontSize: 15 }} >{title}</Text>
+                <Text style={{ marginLeft: 10, fontSize: 16, fontWeight: '500' }} >{title}</Text>
             </View>
             {
                 isIOS ?
@@ -59,4 +58,12 @@ export default function MyDateTimePicker({ title, mode }) {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row', alignItems: 'center', justifyContent:
+            'space-between', marginVertical: 10, marginHorizontal: 5, borderWidth: 1, borderColor: '#797979',
+        padding: 10, borderRadius: 5, backgroundColor: '#F6F6F6'
+    }
+})
 

@@ -29,6 +29,8 @@ export default function FeedbackScreen() {
         const res = await sendFeedback(userInfo.uid, rating, feedback);
         if (res) {
             setIsSent(true);
+            setRating(null);
+            setFeedback("");
         }
         else {
             showMessage({
@@ -61,7 +63,7 @@ export default function FeedbackScreen() {
         <SafeAreaView style={globalStyles.container}>
             <FlexCard>
                 <ScrollView style={{ flex: 1 }}>
-                    <Image source={{ uri: gifLink }} style={styles.imgStyle} />
+                    <Image onLoadEnd={() => setLoading(false)} source={{ uri: gifLink }} style={styles.imgStyle} />
                     <Text style={styles.title}>Trãi nghiệm của bạn như thế nào?</Text>
                     <StarRating
                         disabled={false} maxStars={5} rating={rating} selectedStar={setRating}

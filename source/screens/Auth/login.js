@@ -30,12 +30,22 @@ export default function Login(props) {
                 });
             })
             .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
+                const errorCode = error.code;
+                console.log(errorCode);
+                var des = "Có sự cố xảy ra trong quá trình đăng nhập, vui lòng kiểm tra và thử lại.";
+                switch (errorCode) {
+                    case "auth/wrong-password":
+                    case "auth/user-not-found":
+                        des = "Tài khoản hoặc mật khẩu không đúng";
+                        break;
+                    case "auth/network-request-failed":
+                        des = "Vui lòng kiểm tra kết nối mạng và thử lại";
+                        break;
+                }
                 setLoading(false)
                 showMessage({
                     message: 'Đăng nhập thất bại',
-                    description: error.message,
+                    description: des,
                     type: 'danger'
                 })
             });

@@ -22,8 +22,8 @@ export default function AppRoute() {
             else {
                 setLoginState(false)
             }
-            setIsLoading(false);
         })
+        setIsLoading(false);
     }, [])
     const setLoginState = (stt) => {
         setIsLoggedIn(stt)

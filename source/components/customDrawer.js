@@ -4,26 +4,25 @@
 import React from 'react';
 import {
     SafeAreaView,
-    View,
     StyleSheet,
     Image, TouchableOpacity,
     Text,
-    Linking,
 } from 'react-native';
 
 import {
     DrawerContentScrollView,
     DrawerItemList,
-    DrawerItem,
 } from '@react-navigation/drawer';
 import { AuthButton, GetIcon } from './button';
 import { showMessage } from 'react-native-flash-message';
+import { useDispatch } from 'react-redux';
+import { resetUserInfo } from '../redux/userInfoSlice';
 
 const CustomSidebarMenu = (props) => {
-
+    const dispatch = useDispatch();
     const logOut = () => {
         firebaseApp.auth().signOut().then(() => {
-            console.log("Logged out successfully")
+            dispatch(resetUserInfo())
             showMessage({
                 message: "Đăng xuất thành công",
                 type: 'success'
@@ -49,10 +48,7 @@ const CustomSidebarMenu = (props) => {
             <DrawerContentScrollView {...props}>
                 <DrawerItemList {...props} />
                 {/* <OtherButton title={'History'} /> */}
-                <DrawerItem
-                    label="Về chúng tôi"
-                    onPress={() => Linking.openURL('https://trolysuckhoe.herokuapp.com/')}
-                />
+
                 <TouchableOpacity style={styles.customItem}>
                     <Text style={{ marginRight: 3 }}>
                         Đánh giá

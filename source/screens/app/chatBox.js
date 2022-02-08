@@ -13,6 +13,10 @@ import TextToSpeech from '../../bussiness/textToSpeech';
 import LoadingIndicator from '../../components/loadingIndicator';
 import uuid from 'react-native-uuid'
 import { loadMsg, saveMsg, searchOtherInfo } from '../../servies/msgServies';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserInfo } from '../../redux/userInfoSlice';
+import { getUserInfo } from '../../servies/userInfoServices';
+import { isToday } from '../../bussiness/date';
 const BOT = {
     _id: 2,
     name: 'Bot',
@@ -44,19 +48,19 @@ const requestRecordPermission = async () => {
 };
 
 export default function ChatboxScreen({ navigation }) {
+    const dispatch = useDispatch();
+    const userInfo = useSelector(state => state.userInfo);
     const [isSetupDialogflow, setIsSetupDialogflow] = React.useState(false);
     const [isLoading, setLoading] = React.useState(true)
     const [isOffline, setIsOffline] = React.useState(true);
-    const [messages, setMessages] = React.useState([helloMsg]);
+    const [messages, setMessages] = React.useState([]);
     const [isTyping, setIsTyping] = React.useState(false);
     const [isListening, setIsListening] = React.useState(false);
     const [msg, setMsg] = React.useState('');
-    const [userInfo] = React.useState(firebaseApp.auth().currentUser);
     const [ttsContent, setTtsContent] = React.useState('');
     // const [pitch, setPitch] = React.useState('');
     //set up dialogflow server
     React.useEffect(() => {
-        console.log({ isOffline, isSetupDialogflow });
         if (!isSetupDialogflow && !isOffline) {
             Dialogflow_V2.setConfiguration(
                 dialogflowConfig.client_email,
@@ -73,15 +77,18 @@ export default function ChatboxScreen({ navigation }) {
             // }];
             // Dialogflow_V2.setPermanentContexts(permanentContexts);
             setIsSetupDialogflow(true);
-            // loadEarlier();
             getInitData()
-            // saveMsg(userInfo.uid, helloMsg);
         }
     }, [isOffline])
 
     const getInitData = async () => {
-        // if(res.length != 0 )
-        // setMessages(GiftedChat.append(res, helloMsg))
+        const userId = firebaseApp.auth().currentUser.uid;
+        const res = await getUserInfo(userId);
+        setUserInfo(res);
+        dispatch(setUserInfo(res));
+        const userBirthday = new Date(res.birthday);
+        const welcomeMsg = isToday(userBirthday) ? getHappyBirthdayMsg(res.displayName) : getHelloMsg(res.displayName);
+        setMessages(prs => GiftedChat.append(prs, [welcomeMsg]))
         setLoading(false);
     }
     //set up network info and voice services
@@ -198,7 +205,6 @@ export default function ChatboxScreen({ navigation }) {
     }
 
     const onSend = React.useCallback(async (messages = []) => {
-        console.log(messages);
         const msg = messages[0].text;
         setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
         setIsTyping(true);
@@ -271,13 +277,6 @@ export default function ChatboxScreen({ navigation }) {
         setIsTyping(false);
     }
 
-    const retryConnection = () => {
-        NetInfo.fetch().then(state => {
-            setIsOffline(!state.isConnected);
-            console.log(state.isConnected);
-        })
-    }
-
     const pressLink = (content) => {
         const newMsg = {
             _id: uuid.v4(),
@@ -339,7 +338,7 @@ export default function ChatboxScreen({ navigation }) {
 
     const loadEarlier = async () => {
         setLoading(true);
-        const res = await loadMsg(userInfo.uid, messages.length - 1);
+        const res = await loadMsg(userInfo.userId, messages.length - 1);
         if (res != null && res.length != 0) {
             setMessages(current => GiftedChat.append(res, current));
         }
@@ -349,8 +348,8 @@ export default function ChatboxScreen({ navigation }) {
     return (
         <SafeAreaView style={styles.container} >
             {
-                isOffline &&
-                <View style={styles.noInternetContainer} >
+                isOffline && !isLoading &&
+                < View style={styles.noInternetContainer} >
                     <Text style={styles.noInternet}>Không có kết nối internet</Text>
                     {/* <IconButton iconName={'reload'} source={'Ionicons'} onPress={retryConnection} size={18} /> */}
 
@@ -382,7 +381,7 @@ export default function ChatboxScreen({ navigation }) {
                 isLoading &&
                 <LoadingIndicator />
             }
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }
 
@@ -402,18 +401,22 @@ const styles = StyleSheet.create({
     },
 
 });
-
-const helloMsg = {
-    _id: 0,
-    text: 'Xin chào! Tôi có thể giúp gì được cho bạn?',
-    content: undefined,
-    createdAt: new Date(),
-    user: BOT
+const getHelloMsg = (name) => {
+    return {
+        _id: 0,
+        text: `Xin chào ${name}! Tôi có thể giúp gì được cho bạn?`,
+        content: undefined,
+        createdAt: new Date(),
+        user: BOT
+    }
 }
 
-const msgForm = {
-    _id: -1,
-    text: '',
-    createdAt: undefined,
-    user: undefined,
+const getHappyBirthdayMsg = (name) => {
+    return {
+        _id: 0,
+        text: `Chúc mừng sinh nhật ${name}! Tôi có thể giúp gì được cho bạn?`,
+        content: undefined,
+        createdAt: new Date(),
+        user: BOT
+    }
 }
