@@ -77,7 +77,7 @@ export default function ExpandTextView({ currentMessage, maxHeight = 240, pressL
             case 'img':
                 return getImage(item.content, id);
             case 'link':
-                return getLink(item.content, id);
+                return getLink(item, id);
             case 'suggest':
                 return (
                     <Text key={id} style={styles.header3} >{item.content}</Text>
@@ -93,10 +93,11 @@ export default function ExpandTextView({ currentMessage, maxHeight = 240, pressL
     }
 
     const getLink = (item, id) => {
+        const str = item.content + " " + item.name;
         // const onPress = () => pressLink(item);
         return (
-            <TouchableOpacity key={id} onPress={() => pressLink(item)} >
-                <Text style={styles.link}>{item}</Text>
+            <TouchableOpacity key={id} onPress={() => pressLink(str)} >
+                <Text style={styles.link}>{item.content}</Text>
             </TouchableOpacity >
         )
     }

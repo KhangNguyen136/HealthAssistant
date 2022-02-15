@@ -16,6 +16,7 @@ import { loadMsg, saveMsg, searchOtherInfo } from '../../servies/msgServies';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserInfo } from '../../redux/userInfoSlice';
 import { getUserInfo } from '../../servies/userInfoServices';
+import { useFocusEffect } from '@react-navigation/native';
 import { isToday } from '../../bussiness/date';
 const BOT = {
     _id: 2,
@@ -96,6 +97,8 @@ export default function ChatboxScreen({ navigation }) {
         const removeNetInfoSub = NetInfo.addEventListener((state) => {
             const offline = !(state.isConnected && state.isInternetReachable);
             setIsOffline(offline);
+            if (offline)
+                setLoading(false);
         });
         requestRecordPermission()
         Voice.onSpeechStart = onSpeechStart;
@@ -113,7 +116,11 @@ export default function ChatboxScreen({ navigation }) {
             removeNetInfoSub();
         };
     }, [])
-
+    useFocusEffect(
+        React.useCallback(() => {
+            return () => setTtsContent('');
+        }, [])
+    )
     const onSpeechStart = () => {
         //Invoked when .start() is called without error
         console.log('onSpeechStart: ');
@@ -230,6 +237,7 @@ export default function ChatboxScreen({ navigation }) {
     const handleResponse = async (result) => {
         console.log('Response from dialogflow: ')
         console.log(result)
+        const isSearch = result.queryResult.fulfillmentMessages[1]?.payload.isSearch;
         // const msg = msgForm;
         try {
             const webhoookStt = result.webhookStatus
@@ -238,7 +246,7 @@ export default function ChatboxScreen({ navigation }) {
             }
             var text = "";
             var data = undefined;
-            if (result.queryResult.intent.displayName == "tra_cuu") {
+            if (isSearch) {
                 const searchRes = await searchOtherInfo(result.queryResult.queryText);
                 if (searchRes == null)
                     throw new Error();

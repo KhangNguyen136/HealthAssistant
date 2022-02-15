@@ -37,7 +37,12 @@ const CustomSidebarMenu = (props) => {
             })
         })
     }
-
+    const rate = () => {
+        showMessage({
+            type: 'info',
+            message: 'Chức năng sắp ra mắt'
+        })
+    }
     return (
         <SafeAreaView style={{ flex: 1 }}>
             {/*Top Large Image */}
@@ -49,7 +54,7 @@ const CustomSidebarMenu = (props) => {
                 <DrawerItemList {...props} />
                 {/* <OtherButton title={'History'} /> */}
 
-                <TouchableOpacity style={styles.customItem}>
+                <TouchableOpacity style={styles.customItem} onPress={rate}>
                     <Text style={{ marginRight: 3 }}>
                         Đánh giá
                     </Text>

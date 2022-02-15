@@ -5813,6 +5813,11 @@ react-native-star-rating@^1.1.0:
     react-native-button "^2.3.0"
     react-native-vector-icons "^4.5.0"
 
+react-native-step-indicator@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-step-indicator/-/react-native-step-indicator-1.0.3.tgz#d136ec88639485a338c8ce281035aefd9d169f8f"
+  integrity sha512-WwTb6lpJl0T7MV59sus1utoEQuqbuWHq6V0R0iDWmlPRFjM0qirhTNTS5on1+V9Qmc9dsUCT380/mRgDF+U6zw==
+
 react-native-toast-message@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/react-native-toast-message/-/react-native-toast-message-1.6.0.tgz#863466ff78429902c7182bc08dd8d879476c0a3b"
