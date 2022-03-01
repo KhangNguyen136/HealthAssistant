@@ -60,6 +60,7 @@ export default function ChatboxScreen({ navigation }) {
     const [isListening, setIsListening] = React.useState(false);
     const [msg, setMsg] = React.useState('');
     const [ttsContent, setTtsContent] = React.useState('');
+    const chatboxRef = React.useRef();
     // const [pitch, setPitch] = React.useState('');
     //set up dialogflow server
     React.useEffect(() => {
@@ -217,8 +218,10 @@ export default function ChatboxScreen({ navigation }) {
         setIsTyping(true);
         Dialogflow_V2.requestQuery(msg,
             (result) => {
+                chatboxRef.current.scrollToBottom()
                 handleResponse(result);
-                setIsOffline(false);
+                if (isOffline)
+                    setIsOffline(false);
             },
             (error) => {
                 console.log(error.message)
@@ -372,6 +375,8 @@ export default function ChatboxScreen({ navigation }) {
                 user={{
                     _id: 1,
                 }}
+                ref={chatboxRef}
+                scrollToBottom
                 renderSend={CustomButton}
                 // renderMessage={customMessage}
                 renderBubble={props => customBubble(props, setTtsContent)}

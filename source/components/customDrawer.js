@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
         height: 120,
         borderRadius: 10,
         alignSelf: 'center',
+        marginTop: 40,
     },
     iconStyle: {
         width: 15,

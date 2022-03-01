@@ -1,10 +1,13 @@
 import React from 'react';
+import { Platform } from 'react-native';
+import { StatusBar } from 'react-native';
 import SplashScreen from '../screens/SplashScreen';
 import AuthStack from './AuthStack';
 import { NavigationContainer } from '@react-navigation/native';
 import firebaseApp from '../firebaseConfig';
 import FlashMessage from 'react-native-flash-message';
 import MainStack from './mainStack';
+import { getStatusBarHeight } from 'react-native-status-bar-height'
 // import { useDispatch } from 'react-redux';
 // import { setUserInfo } from '../redux/userInfoSlice';
 export default function AppRoute() {
@@ -38,6 +41,8 @@ export default function AppRoute() {
     }
     return (
         <NavigationContainer>
+            <StatusBar translucent={true}
+                barStyle={"dark-content"} />
             {
                 isLoggedIn == true ?
                     (
@@ -46,7 +51,7 @@ export default function AppRoute() {
                     ) :
                     (<AuthStack />)
             }
-            <FlashMessage position={'top'} />
+            <FlashMessage position={'top'} statusBarHeight={getStatusBarHeight(false)} />
         </NavigationContainer>
     )
 
