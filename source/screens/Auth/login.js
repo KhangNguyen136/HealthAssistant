@@ -131,7 +131,7 @@ export default function Login(props) {
                     </TouchableOpacity>
                     <Text style={{ textAlign: 'center', fontSize: 17, fontWeight: '500' }} > Hoặc tiếp tục với </Text>
                     {/* <LoginWithBtn type={'facebook'} /> */}
-                    <LoginWithBtn type={'google'} />
+                    {/* <LoginWithBtn type={'google'} /> */}
                     {/* <LoginWithBtn type={'phone'} /> */}
                     <View style={{
                         flexDirection: 'row',

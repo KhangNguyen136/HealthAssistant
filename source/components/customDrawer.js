@@ -7,6 +7,8 @@ import {
     StyleSheet,
     Image, TouchableOpacity,
     Text,
+    Linking
+    , Platform
 } from 'react-native';
 
 import {
@@ -17,6 +19,7 @@ import { AuthButton, GetIcon } from './button';
 import { showMessage } from 'react-native-flash-message';
 import { useDispatch } from 'react-redux';
 import { resetUserInfo } from '../redux/userInfoSlice';
+const GOOGLE_PACKAGE_NAME = 'com.khangnguyen136.HealthAssistant';
 
 const CustomSidebarMenu = (props) => {
     const dispatch = useDispatch();
@@ -38,10 +41,13 @@ const CustomSidebarMenu = (props) => {
         })
     }
     const rate = () => {
-        showMessage({
-            type: 'info',
-            message: 'Chức năng sắp ra mắt'
-        })
+        if (Platform.OS === 'ios')
+            showMessage({
+                type: 'info',
+                message: 'Chức năng sắp ra mắt'
+            })
+        else
+            Linking.openURL(`market://details?id=${GOOGLE_PACKAGE_NAME}`).catch((error) => showMessage({ type: 'danger', message: 'Vui lòng kiểm tra cửa hàng Google Play của bạn!', description: error }))
     }
     return (
         <SafeAreaView style={{ flex: 1 }}>
