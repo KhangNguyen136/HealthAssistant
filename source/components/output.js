@@ -93,7 +93,7 @@ export default function ExpandTextView({ currentMessage, maxHeight = 240, pressL
     }
 
     const getLink = (item, id) => {
-        const str = item.content + " " + item.name;
+        const str = item.name != undefined ? item.content + " " + item.name : item.content;
         // const onPress = () => pressLink(item);
         return (
             <TouchableOpacity key={id} onPress={() => pressLink(str)} >

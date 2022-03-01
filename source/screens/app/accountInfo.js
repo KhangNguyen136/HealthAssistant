@@ -11,7 +11,6 @@ import LoadingIndicator from '../../components/loadingIndicator';
 import { updateInfo } from '../../servies/userInfoServices';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserInfo } from '../../redux/userInfoSlice'
-import { sub } from 'react-native-reanimated';
 export default function UserInfo({ navigation }) {
     const dispatch = useDispatch();
     const userInfo = useSelector(state => state.userInfo);

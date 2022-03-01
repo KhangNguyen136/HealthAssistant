@@ -119,7 +119,6 @@ export default function TextToSpeech({ content, setContent }) {
                     <Text style={styles.converting}>Đang chuyển đổi văn bản thành giọng nói</Text>
                     <Spinner isVisible={true} type='Wave' size={20} color='#5f27cd' />
                 </View>
-
                 <IconButton iconName={'cancel-presentation'} source={'MaterialIcons'} color='red'
                     onPress={cancelSpeak} />
             </View>

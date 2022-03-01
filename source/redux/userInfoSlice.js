@@ -8,11 +8,12 @@ const initValue = {
   birthday: null,
 }
 export const userInfoSlice = createSlice({
-  name: 'userInfoState',
+  name: 'userInfo',
   initialState: initValue,
   reducers: {
     setUserInfo: (state, action) => {
       const data = action.payload;
+      console.log('Set redux data', data);
       state.email = data.email;
       state.userId = data.userId;
       state.displayName = data.displayName;

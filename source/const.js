@@ -8,8 +8,8 @@ export const textToSpeechAPIHeader = {
     callback_url: callBackUrl,
 }
 
-// export const serverUrl = 'https://guarded-plateau-01141.herokuapp.com/';
-export const serverUrl = 'https://ede9-112-197-233-167.ngrok.io/'
+export const serverUrl = 'https://guarded-plateau-01141.herokuapp.com/';
+// export const serverUrl = 'https://b7b2-112-197-184-62.ngrok.io/'
 
 //zalo
 // export const textToSpeechAPIKey = 'qtbht4he8xsT6w0iChS1Tle9VtDhXwB1';

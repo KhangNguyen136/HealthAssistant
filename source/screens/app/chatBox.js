@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, PermissionsAndroid, Platform } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, PermissionsAndroid, Platform } from 'react-native';
 import { GiftedChat, Send } from 'react-native-gifted-chat'
 import { dialogflowConfig } from '../../../env';
 import { Dialogflow_V2 } from 'react-native-dialogflow';
@@ -13,7 +13,7 @@ import TextToSpeech from '../../bussiness/textToSpeech';
 import LoadingIndicator from '../../components/loadingIndicator';
 import uuid from 'react-native-uuid'
 import { loadMsg, saveMsg, searchOtherInfo } from '../../servies/msgServies';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setUserInfo } from '../../redux/userInfoSlice';
 import { getUserInfo } from '../../servies/userInfoServices';
 import { useFocusEffect } from '@react-navigation/native';
@@ -50,7 +50,8 @@ const requestRecordPermission = async () => {
 
 export default function ChatboxScreen({ navigation }) {
     const dispatch = useDispatch();
-    const userInfo = useSelector(state => state.userInfo);
+    // const userInfo = useSelector(state => state.userInfo);
+    const userId = firebaseApp.auth().currentUser.uid;
     const [isSetupDialogflow, setIsSetupDialogflow] = React.useState(false);
     const [isLoading, setLoading] = React.useState(true)
     const [isOffline, setIsOffline] = React.useState(true);
@@ -83,9 +84,8 @@ export default function ChatboxScreen({ navigation }) {
     }, [isOffline])
 
     const getInitData = async () => {
-        const userId = firebaseApp.auth().currentUser.uid;
         const res = await getUserInfo(userId);
-        setUserInfo(res);
+        // setUserInfo(res);
         dispatch(setUserInfo(res));
         const userBirthday = new Date(res.birthday);
         const welcomeMsg = isToday(userBirthday) ? getHappyBirthdayMsg(res.displayName) : getHelloMsg(res.displayName);
@@ -95,10 +95,10 @@ export default function ChatboxScreen({ navigation }) {
     //set up network info and voice services
     React.useEffect(() => {
         const removeNetInfoSub = NetInfo.addEventListener((state) => {
-            const offline = !(state.isConnected && state.isInternetReachable);
-            setIsOffline(offline);
-            if (offline)
-                setLoading(false);
+            const res = !(state.isConnected && state.isInternetReachable);
+            setIsOffline(res);
+            // if (res)
+            //     setLoading(false);
         });
         requestRecordPermission()
         Voice.onSpeechStart = onSpeechStart;
@@ -228,7 +228,7 @@ export default function ChatboxScreen({ navigation }) {
                 popLastMessages();
             }
         )
-        saveMsg(userInfo.uid, messages[0]);
+        saveMsg(userId, messages[0]);
     }, [])
 
     const clearMsg = () => {
@@ -281,7 +281,7 @@ export default function ChatboxScreen({ navigation }) {
     const botReply = (msg) => {
         // console.log(msg)
         setMessages(previousMessages => GiftedChat.append(previousMessages, msg))
-        saveMsg(userInfo.uid, msg);
+        saveMsg(userId, msg);
         setIsTyping(false);
     }
 
@@ -346,7 +346,7 @@ export default function ChatboxScreen({ navigation }) {
 
     const loadEarlier = async () => {
         setLoading(true);
-        const res = await loadMsg(userInfo.userId, messages.length - 1);
+        const res = await loadMsg(userId, messages.length - 1);
         if (res != null && res.length != 0) {
             setMessages(current => GiftedChat.append(res, current));
         }
